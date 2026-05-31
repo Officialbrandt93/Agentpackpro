@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Agents Pro Pack — Acesso</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
@@ -318,8 +318,27 @@
     const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsbHZpY2tocHVwb2hnaXJxemh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMTYzOTAsImV4cCI6MjA5NTc5MjM5MH0.hd6ZG-cH2nkqHG4oTroUiNWnBOjZYFhCmPCo-pZy9JQ';
     // ============================================================
 
-    const { createClient } = supabase;
-    const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+    let db = null;
+
+    function iniciarSupabase() {
+      if (!window.supabase || !window.supabase.createClient) {
+        console.error('[Supabase] Biblioteca não carregou. Verifique CDN, conexão ou bloqueadores.');
+        mostrarErro('Não foi possível carregar a conexão. Atualize a página e tente novamente.');
+        return null;
+      }
+
+      const { createClient } = window.supabase;
+
+      return createClient(SUPABASE_URL, SUPABASE_KEY, {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false
+        }
+      });
+    }
+
+    db = iniciarSupabase();
 
     // Verifica se já tem sessão salva
     window.addEventListener('DOMContentLoaded', () => {
@@ -352,13 +371,54 @@
       btn.innerHTML = '<div class="spinner"></div> Verificando...';
 
       try {
-        const { data, error } = await db
-          .from('compradores')
+        if (!db) {
+          db = iniciarSupabase();
+          if (!db) throw new Error('Supabase client não inicializado.');
+        }
+
+        // IMPORTANTE:
+        // No Supabase/Postgres, o nome da tabela precisa bater com o nome real.
+        // Como sua tabela foi criada como "Compradores" com C maiúsculo,
+        // usamos exatamente .from('Compradores').
+        // O .ilike() evita erro caso o email tenha sido salvo com letras maiúsculas/minúsculas diferentes.
+        let { data, error } = await db
+          .from('Compradores')
           .select('email, nome')
-          .eq('email', email)
+          .ilike('email', email)
+          .limit(1)
           .maybeSingle();
 
-        if (error) throw error;
+        // Fallback: se no Supabase a tabela tiver sido criada toda minúscula via SQL,
+        // tenta novamente em "compradores".
+        const tabelaNaoExiste = error && (
+          error.code === '42P01' ||
+          String(error.message || '').toLowerCase().includes('does not exist') ||
+          String(error.details || '').toLowerCase().includes('does not exist')
+        );
+
+        if (tabelaNaoExiste) {
+          console.warn('[Supabase] Tabela "Compradores" não encontrada. Tentando "compradores"...', error);
+
+          const tentativaMinuscula = await db
+            .from('compradores')
+            .select('email, nome')
+            .ilike('email', email)
+            .limit(1)
+            .maybeSingle();
+
+          data = tentativaMinuscula.data;
+          error = tentativaMinuscula.error;
+        }
+
+        if (error) {
+          console.error('[Supabase] Erro ao consultar acesso:', {
+            code: error.code,
+            message: error.message,
+            details: error.details,
+            hint: error.hint
+          });
+          throw error;
+        }
 
         if (data) {
           // Email encontrado — salva sessão por 24h
@@ -375,8 +435,23 @@
           btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Verificar acesso';
         }
       } catch (err) {
-        console.error(err);
-        mostrarErro('Erro de conexão. Tente novamente em instantes.');
+        console.error('[Login] Falha completa:', err);
+
+        let mensagem = 'Erro de conexão. Tente novamente em instantes.';
+
+        if (err && (err.code === '42501' || String(err.message || '').toLowerCase().includes('permission denied'))) {
+          mensagem = 'Acesso bloqueado pela política do banco. Verifique a RLS Policy de SELECT para a tabela Compradores.';
+        }
+
+        if (err && (err.status === 401 || err.status === 403)) {
+          mensagem = 'Chave do Supabase inválida ou sem permissão. Verifique a anon key e as policies.';
+        }
+
+        if (err && (err.code === '42P01' || String(err.message || '').toLowerCase().includes('does not exist'))) {
+          mensagem = 'Tabela não encontrada. Verifique se o nome está exatamente como Compradores no Supabase.';
+        }
+
+        mostrarErro(mensagem);
         btn.disabled = false;
         btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Verificar acesso';
       }
