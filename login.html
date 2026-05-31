@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Agents Pro Pack — Acesso</title>
+  <title>Agents Pro Pack — Login</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -278,12 +278,9 @@
       <p class="subtitle">Digite o email que você usou na compra para liberar o acesso aos 102 agents.</p>
 
       <label for="email">Seu email de compra</label>
-      <input type="email" id="email" placeholder="voce@email.com" autocomplete="email" />
+      <input type="email" id="email" placeholder="Enter your email" autocomplete="email" />
 
-      <button class="btn" id="btn-check" onclick="verificarAcesso()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        Verificar acesso
-      </button>
+      <button class="btn" id="btn-check" onclick="verificarAcesso()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Verify access</button>
 
       <div class="msg error" id="msg-error">
         <span>⚠</span>
@@ -300,10 +297,10 @@
     <!-- Tela de acesso liberado -->
     <div class="access-granted" id="access-granted">
       <div class="check-circle">✓</div>
-      <h2>Acesso liberado!</h2>
-      <p id="welcome-text">Bem-vindo ao Agents Pro Pack.</p>
+      <h2>Access granted!</h2>
+      <p id="welcome-text">Welcome ao Agents Pro Pack.</p>
       <a href="./index.html" class="btn-goto">
-        ⚡ Acessar os agents
+        ⚡ Access os agents
       </a>
     </div>
 
@@ -362,13 +359,13 @@
       msgError.style.display = 'none';
 
       if (!email || !email.includes('@')) {
-        mostrarErro('Digite um email válido.');
+        mostrarErro('Enter a valid email address.');
         return;
       }
 
       // Estado de carregamento
       btn.disabled = true;
-      btn.innerHTML = '<div class="spinner"></div> Verificando...';
+      btn.innerHTML = '<div class="spinner"></div> Checking...';
 
       try {
         if (!db) {
@@ -432,15 +429,15 @@
         } else {
           mostrarErro('Este email não encontrado. Verifique se usou o email correto na compra.');
           btn.disabled = false;
-          btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Verificar acesso';
+          btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Verify access';
         }
       } catch (err) {
         console.error('[Login] Falha completa:', err);
 
-        let mensagem = 'Erro de conexão. Tente novamente em instantes.';
+        let mensagem = 'Erro de conexão. Please try again em instantes.';
 
         if (err && (err.code === '42501' || String(err.message || '').toLowerCase().includes('permission denied'))) {
-          mensagem = 'Acesso bloqueado pela política do banco. Verifique a RLS Policy de SELECT para a tabela Compradores.';
+          mensagem = 'Access blocked pela política do banco. Verifique a RLS Policy de SELECT para a tabela Compradores.';
         }
 
         if (err && (err.status === 401 || err.status === 403)) {
@@ -453,7 +450,7 @@
 
         mostrarErro(mensagem);
         btn.disabled = false;
-        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Verificar acesso';
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Verify access';
       }
     }
 
@@ -467,8 +464,8 @@
       document.getElementById('login-form').style.display = 'none';
       const granted = document.getElementById('access-granted');
       granted.style.display = 'block';
-      const saudacao = nome ? `Bem-vindo, ${nome.split(' ')[0]}!` : `Bem-vindo!`;
-      document.getElementById('welcome-text').textContent = saudacao + ' Acesso liberado para ' + email;
+      const saudacao = nome ? `Welcome, ${nome.split(' ')[0]}!` : `Welcome!`;
+      document.getElementById('welcome-text').textContent = saudacao + ' Access granted para ' + email;
     }
   </script>
 </body>
