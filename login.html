@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Agents Pro Pack — Acesso</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ===================== CONFIGURAÇÃO — edite esses dois valores ===================== */
+    /* Copie do Supabase: Settings → API */
+
+    /* ================================================================================== */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --lime: #C8FF00;
+      --lime-dim: #a8d800;
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --surface2: #1a1a1a;
+      --border: rgba(255,255,255,0.08);
+      --border-lime: rgba(200,255,0,0.35);
+      --text: #f0f0f0;
+      --text-muted: #888;
+      --red: #ff4d4d;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: -200px; left: 50%;
+      transform: translateX(-50%);
+      width: 600px; height: 400px;
+      background: radial-gradient(ellipse, rgba(200,255,0,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .grid-bg {
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 420px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 2rem;
+    }
+
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: var(--lime);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800;
+      font-size: 16px;
+      color: #0a0a0a;
+      flex-shrink: 0;
+    }
+
+    .logo-text { font-size: 16px; font-weight: 700; }
+    .logo-text span { color: var(--lime); }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+    h1 em { color: var(--lime); font-style: normal; }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    input[type="email"] {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 15px;
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 1rem;
+    }
+
+    input[type="email"]:focus {
+      border-color: var(--border-lime);
+      box-shadow: 0 0 0 3px rgba(200,255,0,0.08);
+    }
+
+    input[type="email"]::placeholder { color: #444; }
+
+    .btn {
+      width: 100%;
+      background: var(--lime);
+      color: #0a0a0a;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: 'Syne', sans-serif;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn:hover { background: #d4ff1a; }
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled { background: #3a4a00; color: #6a7a00; cursor: not-allowed; transform: none; }
+
+    .btn svg { width: 16px; height: 16px; }
+
+    .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(0,0,0,0.3);
+      border-top-color: #0a0a0a;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .msg {
+      display: none;
+      margin-top: 1rem;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .msg.error {
+      display: flex;
+      gap: 8px;
+      background: rgba(255,77,77,0.1);
+      border: 1px solid rgba(255,77,77,0.25);
+      color: #ff8080;
+    }
+
+    .msg.success {
+      display: flex;
+      gap: 8px;
+      background: rgba(200,255,0,0.08);
+      border: 1px solid rgba(200,255,0,0.25);
+      color: var(--lime);
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 1.75rem 0;
+    }
+
+    .footer-note {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .footer-note a {
+      color: var(--lime);
+      text-decoration: none;
+    }
+
+    .access-granted {
+      display: none;
+      text-align: center;
+    }
+    .access-granted .check-circle {
+      width: 64px; height: 64px;
+      background: rgba(200,255,0,0.1);
+      border: 2px solid var(--lime);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.25rem;
+      font-size: 28px;
+    }
+    .access-granted h2 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .access-granted p {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+    .btn-goto {
+      width: 100%;
+      background: var(--lime);
+      color: #0a0a0a;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: 'Syne', sans-serif;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+      transition: background 0.2s;
+    }
+    .btn-goto:hover { background: #d4ff1a; }
+
+    @media (max-width: 480px) {
+      .card { padding: 2rem 1.5rem; }
+      h1 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-bg"></div>
+
+  <div class="card">
+
+    <!-- Logo -->
+    <div class="logo-row">
+      <div class="logo-icon">C</div>
+      <div class="logo-text">Agents <span>Pro Pack</span></div>
+    </div>
+
+    <!-- Formulário de login -->
+    <div id="login-form">
+      <h1>Seu time de <em>IA</em><br>espera por você.</h1>
+      <p class="subtitle">Digite o email que você usou na compra para liberar o acesso aos 102 agents.</p>
+
+      <label for="email">Seu email de compra</label>
+      <input type="email" id="email" placeholder="voce@email.com" autocomplete="email" />
+
+      <button class="btn" id="btn-check" onclick="verificarAcesso()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Verificar acesso
+      </button>
+
+      <div class="msg error" id="msg-error">
+        <span>⚠</span>
+        <span id="msg-error-text">Este email não tem acesso. Verifique se usou o email correto na compra, ou <a href="https://wa.me/SEU_NUMERO" target="_blank" style="color:var(--lime)">fale conosco</a>.</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <p class="footer-note">
+        Ainda não tem acesso? <a href="https://SEU_LINK_DE_COMPRA" target="_blank">Adquira aqui →</a>
+      </p>
+    </div>
+
+    <!-- Tela de acesso liberado -->
+    <div class="access-granted" id="access-granted">
+      <div class="check-circle">✓</div>
+      <h2>Acesso liberado!</h2>
+      <p id="welcome-text">Bem-vindo ao Agents Pro Pack.</p>
+      <a href="./index.html" class="btn-goto">
+        ⚡ Acessar os agents
+      </a>
+    </div>
+
+  </div>
+
+  <script>
+    // ============================================================
+    // CONFIGURE AQUI — substitua pelos seus valores do Supabase
+    // Settings → API no painel do Supabase
+    // ============================================================
+    const SUPABASE_URL  = 'https://hllvickhpupohgirqzhx.supabase.co';
+    const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsbHZpY2tocHVwb2hnaXJxemh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMTYzOTAsImV4cCI6MjA5NTc5MjM5MH0.hd6ZG-cH2nkqHG4oTroUiNWnBOjZYFhCmPCo-pZy9JQ';
+    // ============================================================
+
+    const { createClient } = supabase;
+    const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // Verifica se já tem sessão salva
+    window.addEventListener('DOMContentLoaded', () => {
+      const sessao = JSON.parse(localStorage.getItem('agp_sessao') || 'null');
+      if (sessao && sessao.expira > Date.now()) {
+        mostrarAcessoLiberado(sessao.email);
+      }
+    });
+
+    // Enter no campo de email
+    document.getElementById('email').addEventListener('keydown', e => {
+      if (e.key === 'Enter') verificarAcesso();
+    });
+
+    async function verificarAcesso() {
+      const emailInput = document.getElementById('email');
+      const email = emailInput.value.trim().toLowerCase();
+      const btn = document.getElementById('btn-check');
+      const msgError = document.getElementById('msg-error');
+
+      msgError.style.display = 'none';
+
+      if (!email || !email.includes('@')) {
+        mostrarErro('Digite um email válido.');
+        return;
+      }
+
+      // Estado de carregamento
+      btn.disabled = true;
+      btn.innerHTML = '<div class="spinner"></div> Verificando...';
+
+      try {
+        const { data, error } = await db
+          .from('compradores')
+          .select('email, nome')
+          .eq('email', email)
+          .maybeSingle();
+
+        if (error) throw error;
+
+        if (data) {
+          // Email encontrado — salva sessão por 24h
+          const sessao = {
+            email: data.email,
+            nome: data.nome || '',
+            expira: Date.now() + (24 * 60 * 60 * 1000)
+          };
+          localStorage.setItem('agp_sessao', JSON.stringify(sessao));
+          mostrarAcessoLiberado(data.email, data.nome);
+        } else {
+          mostrarErro('Este email não encontrado. Verifique se usou o email correto na compra.');
+          btn.disabled = false;
+          btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Verificar acesso';
+        }
+      } catch (err) {
+        console.error(err);
+        mostrarErro('Erro de conexão. Tente novamente em instantes.');
+        btn.disabled = false;
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Verificar acesso';
+      }
+    }
+
+    function mostrarErro(msg) {
+      const el = document.getElementById('msg-error');
+      document.getElementById('msg-error-text').textContent = msg;
+      el.style.display = 'flex';
+    }
+
+    function mostrarAcessoLiberado(email, nome) {
+      document.getElementById('login-form').style.display = 'none';
+      const granted = document.getElementById('access-granted');
+      granted.style.display = 'block';
+      const saudacao = nome ? `Bem-vindo, ${nome.split(' ')[0]}!` : `Bem-vindo!`;
+      document.getElementById('welcome-text').textContent = saudacao + ' Acesso liberado para ' + email;
+    }
+  </script>
+</body>
+</html>
