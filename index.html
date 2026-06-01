@@ -224,6 +224,129 @@ header{
   .agents-grid{padding:16px 20px 80px;grid-template-columns:1fr;}
   .results-bar{padding:10px 20px;}
 }
+
+/* GUIDE BUTTON */
+.guide-btn {
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--fg2);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.guide-btn:hover { border-color: var(--lime); color: var(--lime); }
+
+/* GUIDE MODAL */
+.guide-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.88);
+  z-index: 300;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  opacity: 0; visibility: hidden;
+  transition: all 0.25s;
+}
+.guide-overlay.open { opacity: 1; visibility: visible; }
+.guide-modal {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 16px;
+  max-width: 760px; width: 100%;
+  max-height: 88vh;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.guide-header {
+  padding: 22px 28px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.guide-header-left h2 {
+  font-family: var(--display);
+  font-size: 20px; font-weight: 700;
+}
+.guide-header-left p {
+  font-size: 13px; color: var(--fg3); margin-top: 3px;
+}
+.guide-close {
+  background: var(--bg4); border: 1px solid var(--border);
+  color: var(--fg2); width: 34px; height: 34px;
+  border-radius: 8px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.guide-close:hover { border-color: var(--lime); color: var(--lime); }
+.guide-tabs {
+  display: flex; gap: 0;
+  border-bottom: 1px solid var(--border);
+  padding: 0 28px;
+}
+.guide-tab {
+  background: none; border: none;
+  font-family: var(--sans); font-size: 13px; font-weight: 500;
+  color: var(--fg3); padding: 14px 16px;
+  cursor: pointer; border-bottom: 2px solid transparent;
+  margin-bottom: -1px; transition: all 0.2s;
+  display: flex; align-items: center; gap: 7px;
+}
+.guide-tab:hover { color: var(--fg); }
+.guide-tab.active { color: var(--lime); border-bottom-color: var(--lime); }
+.guide-body {
+  padding: 28px;
+  overflow-y: auto;
+  flex: 1;
+}
+.guide-panel { display: none; }
+.guide-panel.active { display: block; }
+.guide-step {
+  display: flex; gap: 16px;
+  margin-bottom: 28px;
+}
+.guide-step:last-child { margin-bottom: 0; }
+.guide-step-num {
+  width: 28px; height: 28px;
+  background: var(--lime); color: #000;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+  flex-shrink: 0; margin-top: 2px;
+}
+.guide-step-content h3 {
+  font-family: var(--display);
+  font-size: 15px; font-weight: 600;
+  margin-bottom: 6px; color: var(--fg);
+}
+.guide-step-content p {
+  font-size: 13px; color: var(--fg2); line-height: 1.7;
+}
+.guide-step-content code {
+  background: var(--bg4); border: 1px solid var(--border2);
+  color: var(--lime); font-size: 12px;
+  padding: 2px 8px; border-radius: 4px;
+  font-family: monospace;
+}
+.guide-tip {
+  background: rgba(200,255,0,0.06);
+  border: 1px solid rgba(200,255,0,0.15);
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-size: 13px; color: var(--fg2);
+  line-height: 1.6;
+  margin-top: 24px;
+  display: flex; gap: 10px; align-items: flex-start;
+}
+.guide-divider {
+  height: 1px; background: var(--border);
+  margin: 24px 0;
+}
 </style>
 </head>
 <body>
@@ -233,7 +356,7 @@ header{
     <div class="logo-icon">C</div>
     <div class="logo-text">Agents <span>Pro Pack</span></div>
   </a>
-  <div class="header-right">
+  <div class="header-right"><button class="guide-btn" onclick="openGuide()">📖 Installation Guide</button>
     <div class="agent-count-badge">⚡ 102 Agents Ready</div>
   </div>
 </header>
@@ -241,53 +364,6 @@ header{
 <div class="hero-bar">
   <h1>Your <em>AI Specialist Team</em> is Ready.</h1>
   <p>Find the right agent, copy it in one click, and paste into Claude. Expert output from message one — no setup, no configuration.</p>
-</div>
-
-
-<!-- BONUS BANNER -->
-<div style="
-  background: linear-gradient(135deg, rgba(200,255,0,0.08) 0%, rgba(200,255,0,0.04) 100%);
-  border-top: 1px solid rgba(200,255,0,0.2);
-  border-bottom: 1px solid rgba(200,255,0,0.2);
-  padding: 20px 40px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
-">
-  <div style="display:flex;align-items:center;gap:14px;">
-    <span style="font-size:28px;">🎁</span>
-    <div>
-      <div style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:#fff;margin-bottom:2px;">Your Bonus is Included</div>
-      <div style="font-size:13px;color:#A0A0A0;">1,000+ Claude Skills — ready to download and use right now.</div>
-    </div>
-  </div>
-  <a
-    href="https://mega.nz/folder/aENXzBCS#fcewRIeXxjC-RI7yTd4CnQ"
-    target="_blank"
-    rel="noopener"
-    style="
-      background: #C8FF00;
-      color: #000;
-      font-family: 'Inter', sans-serif;
-      font-size: 13px;
-      font-weight: 700;
-      padding: 12px 24px;
-      border-radius: 8px;
-      text-decoration: none;
-      white-space: nowrap;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: opacity 0.2s;
-      flex-shrink: 0;
-    "
-    onmouseover="this.style.opacity='0.85'"
-    onmouseout="this.style.opacity='1'"
-  >
-    ⚡ Access the 1,000+ Bonus Skills here!
-  </a>
 </div>
 
 <div class="controls">
@@ -504,6 +580,203 @@ document.addEventListener('keydown', e => {
 
 // Initial render
 renderCards();
+</script>
+
+<!-- BONUS BANNER -->
+<div style="
+  background: linear-gradient(135deg, rgba(200,255,0,0.08) 0%, rgba(200,255,0,0.04) 100%);
+  border-top: 1px solid rgba(200,255,0,0.2);
+  border-bottom: 1px solid rgba(200,255,0,0.2);
+  padding: 20px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+">
+  <div style="display:flex;align-items:center;gap:14px;">
+    <span style="font-size:28px;">🎁</span>
+    <div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:#fff;margin-bottom:2px;">Your Bonus is Included</div>
+      <div style="font-size:13px;color:#A0A0A0;">1,000+ Claude Skills — ready to download and use right now.</div>
+    </div>
+  </div>
+  <a href="https://mega.nz/folder/aENXzBCS#fcewRIeXxjC-RI7yTd4CnQ" target="_blank" rel="noopener"
+    style="background:#C8FF00;color:#000;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;padding:12px 24px;border-radius:8px;text-decoration:none;white-space:nowrap;display:inline-flex;align-items:center;gap:8px;flex-shrink:0;"
+  >⚡ Access the 1,000+ Bonus Skills here!</a>
+</div>
+
+<!-- INSTALLATION GUIDE MODAL -->
+<div class="guide-overlay" id="guide-overlay" onclick="closeGuideOverlay(event)">
+  <div class="guide-modal">
+    <div class="guide-header">
+      <div class="guide-header-left">
+        <h2>📖 Installation Guide</h2>
+        <p>Choose your platform and follow the steps below.</p>
+      </div>
+      <button class="guide-close" onclick="closeGuide()">✕</button>
+    </div>
+
+    <div class="guide-tabs">
+      <button class="guide-tab active" onclick="switchTab('claude-ai')">🌐 Claude.ai</button>
+      <button class="guide-tab" onclick="switchTab('claude-code')">💻 Claude Code</button>
+      <button class="guide-tab" onclick="switchTab('cowork')">🖥️ Cowork</button>
+    </div>
+
+    <div class="guide-body">
+
+      <!-- Claude.ai Panel -->
+      <div class="guide-panel active" id="panel-claude-ai">
+        <div class="guide-step">
+          <div class="guide-step-num">1</div>
+          <div class="guide-step-content">
+            <h3>Find the agent you want</h3>
+            <p>Browse the platform above, use the search or filters to find the right agent. Each card shows the name, category and what the agent does.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-step-num">2</div>
+          <div class="guide-step-content">
+            <h3>Click "Copy Agent"</h3>
+            <p>Hit the <strong style="color:var(--lime)">⚡ Copy Agent</strong> button on the card. The full agent prompt is now in your clipboard.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-step-num">3</div>
+          <div class="guide-step-content">
+            <h3>Open Claude.ai and go to Projects</h3>
+            <p>Go to <code>claude.ai</code> → click <strong>Projects</strong> in the left sidebar → click <strong>New Project</strong> (or open an existing one).</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-step-num">4</div>
+          <div class="guide-step-content">
+            <h3>Paste into Project Instructions</h3>
+            <p>Inside the project, click <strong>Edit project instructions</strong> → paste the agent you copied → click <strong>Save</strong>.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-step-num">5</div>
+          <div class="guide-step-content">
+            <h3>Start a new chat inside the project</h3>
+            <p>Open a new conversation inside the project. The agent is now active — just send your first message and it will respond as a specialist from message one.</p>
+          </div>
+        </div>
+        <div class="guide-tip">
+          💡 <span><strong>Tip:</strong> Create one project per agent to keep things organized. Example: "Ad Copywriter Agent", "Legal Agent", "Finance Agent". You can switch between them in seconds.</span>
+        </div>
+      </div>
+
+      <!-- Claude Code Panel -->
+      <div class="guide-panel" id="panel-claude-code">
+        <div class="guide-step">
+          <div class="guide-step-num">1</div>
+          <div class="guide-step-content">
+            <h3>Copy the agent from the platform</h3>
+            <p>Click <strong style="color:var(--lime)">⚡ Copy Agent</strong> on the card. The agent content is now in your clipboard.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-step-num">2</div>
+          <div class="guide-step-content">
+            <h3>Open your terminal and navigate to your project folder</h3>
+            <p>Open the terminal and go to the folder where you want to use the agent. Example: <code>cd ~/my-project</code></p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-step-num">3</div>
+          <div class="guide-step-content">
+            <h3>Create the .claude/agents folder</h3>
+            <p>Run this command to create the agents folder if it doesn't exist yet:</p>
+            <p style="margin-top:8px;"><code>mkdir -p .claude/agents</code></p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-step-num">4</div>
+          <div class="guide-step-content">
+            <h3>Create a .md file and paste the agent</h3>
+            <p>Create a new file inside <code>.claude/agents/</code> with any name. Example: <code>ad-copywriter.md</code>. Open it in any text editor and paste the agent content.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-step-num">5</div>
+          <div class="guide-step-content">
+            <h3>Invoke the agent in Claude Code</h3>
+            <p>Open Claude Code in your terminal with <code>claude</code> and invoke the agent with a slash command. Example: <code>/ad-copywriter</code> — Claude will activate the specialist automatically.</p>
+          </div>
+        </div>
+        <div class="guide-tip">
+          💡 <span><strong>Tip:</strong> The file name becomes the slash command. <code>finance-agent.md</code> → <code>/finance-agent</code>. Keep names short and lowercase for easy typing.</span>
+        </div>
+      </div>
+
+      <!-- Cowork Panel -->
+      <div class="guide-panel" id="panel-cowork">
+        <div class="guide-step">
+          <div class="guide-step-num">1</div>
+          <div class="guide-step-content">
+            <h3>Copy the agent from the platform</h3>
+            <p>Click <strong style="color:var(--lime)">⚡ Copy Agent</strong> on the card. The full agent prompt is now in your clipboard.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-step-num">2</div>
+          <div class="guide-step-content">
+            <h3>Open Cowork and create a new Agent</h3>
+            <p>Launch Cowork on your desktop → go to the <strong>Agents</strong> section → click <strong>New Agent</strong> or <strong>+ Add Agent</strong>.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-step-num">3</div>
+          <div class="guide-step-content">
+            <h3>Paste the agent into the System Prompt field</h3>
+            <p>In the agent creation screen, find the <strong>System Prompt</strong> or <strong>Instructions</strong> field and paste the content you copied from the platform.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-step-num">4</div>
+          <div class="guide-step-content">
+            <h3>Name and save your agent</h3>
+            <p>Give the agent a clear name (e.g. "Ad Copywriter", "Legal Assistant") and click <strong>Save</strong>. It will appear in your agent list.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-step-num">5</div>
+          <div class="guide-step-content">
+            <h3>Select and run the agent</h3>
+            <p>From your agent list, click the agent you just created and start a new task. The specialist context is already active — just describe what you need.</p>
+          </div>
+        </div>
+        <div class="guide-tip">
+          💡 <span><strong>Tip:</strong> In Cowork you can attach files directly to the agent session. Combine the specialized agent with your own documents for even sharper, context-aware results.</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function openGuide() {
+  document.getElementById('guide-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeGuide() {
+  document.getElementById('guide-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeGuideOverlay(e) {
+  if (e.target === document.getElementById('guide-overlay')) closeGuide();
+}
+function switchTab(tab) {
+  document.querySelectorAll('.guide-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.guide-panel').forEach(p => p.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById('panel-' + tab).classList.add('active');
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeGuide();
+});
 </script>
 </body>
 </html>
