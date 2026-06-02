@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Agents Pro Pack — Login</title>
+  <script src="https://fast.wistia.com/player.js" async></script>
+  <script src="https://fast.wistia.com/embed/sjyha8vurr.js" async type="module"></script>
+  <style>wistia-player[media-id='sjyha8vurr']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/sjyha8vurr/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -259,6 +262,45 @@
       .card { padding: 2rem 1.5rem; }
       h1 { font-size: 22px; }
     }
+
+    /* VIDEO SECTION */
+    .video-section {
+      margin-bottom: 1.75rem;
+    }
+    .video-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--lime);
+      margin-bottom: 10px;
+    }
+    .video-label-dot {
+      width: 6px; height: 6px;
+      background: var(--lime);
+      border-radius: 50%;
+      animation: blink 1.8s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .video-wrapper {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(200,255,0,0.2);
+      background: #000;
+      box-shadow: 0 0 0 0 rgba(200,255,0,0);
+      animation: video-glow 3s ease-in-out infinite;
+    }
+    @keyframes video-glow {
+      0%,100% { box-shadow: 0 0 12px rgba(200,255,0,0.08); }
+      50%      { box-shadow: 0 0 28px rgba(200,255,0,0.18); }
+    }
+    .video-wrapper wistia-player {
+      display: block;
+      width: 100%;
+    }
   </style>
 </head>
 <body>
@@ -270,6 +312,17 @@
     <div class="logo-row">
       <div class="logo-icon">C</div>
       <div class="logo-text">Agents <span>Pro Pack</span></div>
+    </div>
+
+    <!-- Vídeo de boas-vindas -->
+    <div class="video-section">
+      <div class="video-label">
+        <span class="video-label-dot"></span>
+        Welcome message
+      </div>
+      <div class="video-wrapper">
+        <wistia-player media-id="sjyha8vurr" aspect="1.7777777777777777"></wistia-player>
+      </div>
     </div>
 
     <!-- Formulário de login -->
