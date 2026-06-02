@@ -43,36 +43,73 @@
   /* NAV */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: rgba(14,14,14,0.92);
+    background: rgba(14,14,14,0.95);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
     display: flex; align-items: center; justify-content: space-between;
-    padding: 0 32px; height: 56px;
+    padding: 0 20px; height: 56px;
   }
   .nav-logo {
-    display: flex; align-items: center; gap: 10px;
+    display: flex; align-items: center; gap: 8px;
     font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px;
+    flex-shrink: 0;
   }
   .nav-logo-icon {
     width: 28px; height: 28px; background: var(--lime);
     border-radius: 6px; display: flex; align-items: center; justify-content: center;
-    font-size: 14px; font-weight: 800; color: #0e0e0e;
+    font-size: 14px; font-weight: 800; color: #0e0e0e; flex-shrink: 0;
   }
-  .nav-links { display: flex; gap: 4px; }
+  /* Desktop nav links */
+  .nav-links {
+    display: flex; gap: 4px;
+  }
   .nav-link {
-    padding: 6px 14px; border-radius: 20px;
+    padding: 6px 12px; border-radius: 20px;
     font-size: 13px; color: var(--text2); text-decoration: none;
     transition: all 0.15s; cursor: pointer; border: none; background: none;
+    font-family: 'DM Sans', sans-serif; white-space: nowrap;
   }
   .nav-link:hover, .nav-link.active { color: var(--text); background: var(--surface2); }
   .nav-badge {
     background: var(--lime); color: #0e0e0e;
-    font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px;
-    font-family: 'Syne', sans-serif;
+    font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px;
+    font-family: 'Syne', sans-serif; white-space: nowrap; flex-shrink: 0;
+  }
+  /* Hamburger button - mobile only */
+  .nav-hamburger {
+    display: none; flex-direction: column; gap: 5px; cursor: pointer;
+    background: none; border: none; padding: 6px; margin-left: 8px;
+  }
+  .nav-hamburger span {
+    display: block; width: 22px; height: 2px;
+    background: var(--text); border-radius: 2px; transition: all 0.2s;
+  }
+  /* Mobile drawer */
+  .nav-drawer {
+    display: none; position: fixed; top: 56px; left: 0; right: 0; bottom: 0;
+    background: rgba(14,14,14,0.98); z-index: 99;
+    flex-direction: column; padding: 24px 20px; gap: 4px;
+  }
+  .nav-drawer.open { display: flex; }
+  .nav-drawer .nav-link {
+    font-size: 16px; padding: 14px 16px; border-radius: var(--radius-sm);
+    border-bottom: 1px solid var(--border); border-radius: 0;
+    color: var(--text2);
+  }
+  .nav-drawer .nav-link:last-child { border-bottom: none; }
+  .nav-drawer .nav-link.active, .nav-drawer .nav-link:hover { color: var(--lime); background: none; }
+  @media(max-width: 640px) {
+    .nav-links { display: none; }
+    .nav-badge { display: none; }
+    .nav-hamburger { display: flex; }
+  }
+  @media(min-width: 641px) {
+    .nav-drawer { display: none !important; }
   }
 
   /* LAYOUT */
-  .page { max-width: 780px; margin: 0 auto; padding: 96px 24px 80px; }
+  .page { max-width: 780px; margin: 0 auto; padding: 96px 20px 80px; }
+  @media(max-width:640px) { .page { padding: 72px 16px 60px; } }
 
   /* HERO */
   .hero { text-align: center; padding: 48px 0 64px; }
@@ -327,8 +364,22 @@
     <button class="nav-link" onclick="scrollTo('examples')">Examples</button>
     <button class="nav-link" onclick="scrollTo('faq')">FAQ</button>
   </div>
-  <div class="nav-badge">⚡ 102 Agents</div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div class="nav-badge">⚡ 102 Agents</div>
+    <button class="nav-hamburger" id="hamburger" onclick="toggleDrawer()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
 </nav>
+
+<!-- Mobile drawer -->
+<div class="nav-drawer" id="navDrawer">
+  <button class="nav-link active" onclick="drawerScrollTo('install')">Install</button>
+  <button class="nav-link" onclick="drawerScrollTo('use')">How to Use</button>
+  <button class="nav-link" onclick="drawerScrollTo('agents')">Browse All 102 Agents</button>
+  <button class="nav-link" onclick="drawerScrollTo('examples')">Examples</button>
+  <button class="nav-link" onclick="drawerScrollTo('faq')">FAQ</button>
+</div>
 
 <div class="page">
 <div class="with-toc">
@@ -624,23 +675,33 @@ targeting the keyword "project management tools".</pre>
     <div class="section-num">03</div>
     <div>
       <h2>All 102 agents</h2>
-      <div class="section-sub">Filter by category to find the right specialist for your task.</div>
+      <div class="section-sub">Browse, search and copy any agent directly from the platform.</div>
     </div>
   </div>
 
-  <div class="cat-filter" id="catFilter">
-    <button class="cat-btn active" onclick="filterAgents('all', this)">All 102</button>
-    <button class="cat-btn" onclick="filterAgents('dev', this)">💻 Tech & Dev</button>
-    <button class="cat-btn" onclick="filterAgents('mkt', this)">📣 Marketing</button>
-    <button class="cat-btn" onclick="filterAgents('copy', this)">✍️ Content & Copy</button>
-    <button class="cat-btn" onclick="filterAgents('sales', this)">💰 Sales</button>
-    <button class="cat-btn" onclick="filterAgents('biz', this)">🎯 Strategy & Ops</button>
-    <button class="cat-btn" onclick="filterAgents('data', this)">📊 Data & Finance</button>
-    <button class="cat-btn" onclick="filterAgents('hr', this)">👥 HR & Career</button>
-    <button class="cat-btn" onclick="filterAgents('legal', this)">⚖️ Legal</button>
+  <div class="card" style="text-align:center;padding:36px 24px;">
+    <div style="font-size:40px;margin-bottom:16px;">⚡</div>
+    <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:700;margin-bottom:8px;">Browse All 102 Specialist Agents</div>
+    <div style="color:var(--text2);font-size:14px;max-width:400px;margin:0 auto 24px;line-height:1.6;">
+      Find the right agent by category, search by name, and copy it with one click — directly from the platform.
+    </div>
+    <a href="https://agentpackpro.vercel.app/" target="_blank" style="
+      display:inline-flex;align-items:center;gap:10px;
+      background:var(--lime);color:#0e0e0e;
+      font-family:'Syne',sans-serif;font-size:15px;font-weight:700;
+      padding:14px 32px;border-radius:10px;text-decoration:none;
+      transition:opacity 0.15s;
+    " onmouseover="this.style.opacity=0.88" onmouseout="this.style.opacity=1">
+      Open Agent Library →
+    </a>
+    <div style="margin-top:16px;font-size:12px;color:var(--text3);">
+      🔐 If prompted to log in, use the email address you used at checkout.
+    </div>
   </div>
 
-  <div class="agent-grid" id="agentGrid"></div>
+  <div class="highlight" style="margin-top:16px;">
+    <strong>How to use the library:</strong> Find the agent you want → click <strong>Copy Agent</strong> → paste into Claude Project Instructions or at the start of your conversation.
+  </div>
 </div>
 
 <hr>
@@ -827,141 +888,36 @@ Task: Build a complete 12-month SEO strategy including:
 </div><!-- end page -->
 
 <script>
-// ALL 102 AGENTS DATA
-const agents = [
-  {name:'ad-copywriter',cat:'copy',label:'Content & Copy'},
-  {name:'ai-integration-advisor',cat:'dev',label:'Tech & Dev'},
-  {name:'analytics-interpreter',cat:'data',label:'Data & Finance'},
-  {name:'backend-architect',cat:'dev',label:'Tech & Dev'},
-  {name:'blog-writer',cat:'copy',label:'Content & Copy'},
-  {name:'brand-identity-builder',cat:'mkt',label:'Marketing'},
-  {name:'brand-storyteller',cat:'copy',label:'Content & Copy'},
-  {name:'brand-strategist',cat:'mkt',label:'Marketing'},
-  {name:'budget-planner',cat:'data',label:'Data & Finance'},
-  {name:'campaign-conceiver',cat:'mkt',label:'Marketing'},
-  {name:'career-planner',cat:'hr',label:'HR & Career'},
-  {name:'cash-flow-manager',cat:'data',label:'Data & Finance'},
-  {name:'change-manager',cat:'biz',label:'Strategy & Ops'},
-  {name:'chatbot-builder',cat:'dev',label:'Tech & Dev'},
-  {name:'churn-analyst',cat:'data',label:'Data & Finance'},
-  {name:'code-reviewer',cat:'dev',label:'Tech & Dev'},
-  {name:'competitor-analyst',cat:'mkt',label:'Marketing'},
-  {name:'conflict-mediator',cat:'hr',label:'HR & Career'},
-  {name:'content-marketer',cat:'mkt',label:'Marketing'},
-  {name:'content-planner',cat:'copy',label:'Content & Copy'},
-  {name:'content-repurposer',cat:'copy',label:'Content & Copy'},
-  {name:'contract-analyst',cat:'legal',label:'Legal'},
-  {name:'corporate-legal',cat:'legal',label:'Legal'},
-  {name:'creative-brief-writer',cat:'copy',label:'Content & Copy'},
-  {name:'creative-director',cat:'mkt',label:'Marketing'},
-  {name:'crm-optimizer',cat:'sales',label:'Sales'},
-  {name:'cro-specialist',cat:'mkt',label:'Marketing'},
-  {name:'culture-builder',cat:'hr',label:'HR & Career'},
-  {name:'customer-insights-analyst',cat:'data',label:'Data & Finance'},
-  {name:'customer-success-manager',cat:'biz',label:'Strategy & Ops'},
-  {name:'dashboard-builder',cat:'data',label:'Data & Finance'},
-  {name:'data-pipeline-builder',cat:'dev',label:'Tech & Dev'},
-  {name:'data-summarizer',cat:'data',label:'Data & Finance'},
-  {name:'database-architect',cat:'dev',label:'Tech & Dev'},
-  {name:'debugger',cat:'dev',label:'Tech & Dev'},
-  {name:'delegation-coach',cat:'biz',label:'Strategy & Ops'},
-  {name:'design-system-architect',cat:'dev',label:'Tech & Dev'},
-  {name:'document-writer',cat:'copy',label:'Content & Copy'},
-  {name:'email-assistant',cat:'copy',label:'Content & Copy'},
-  {name:'email-marketing',cat:'mkt',label:'Marketing'},
-  {name:'email-sequence-copywriter',cat:'copy',label:'Content & Copy'},
-  {name:'financial-analyst',cat:'data',label:'Data & Finance'},
-  {name:'fintech-engineer',cat:'dev',label:'Tech & Dev'},
-  {name:'frontend-developer',cat:'dev',label:'Tech & Dev'},
-  {name:'fullstack-developer',cat:'dev',label:'Tech & Dev'},
-  {name:'growth-hacker',cat:'mkt',label:'Marketing'},
-  {name:'hook-writer',cat:'copy',label:'Content & Copy'},
-  {name:'hr-manager',cat:'hr',label:'HR & Career'},
-  {name:'influencer-marketing',cat:'mkt',label:'Marketing'},
-  {name:'interview-coach',cat:'hr',label:'HR & Career'},
-  {name:'investment-advisor',cat:'data',label:'Data & Finance'},
-  {name:'ip-trademark',cat:'legal',label:'Legal'},
-  {name:'labor-law',cat:'legal',label:'Legal'},
-  {name:'landing-page-copywriter',cat:'copy',label:'Content & Copy'},
-  {name:'linkedin-optimizer',cat:'hr',label:'HR & Career'},
-  {name:'market-research-analyst',cat:'mkt',label:'Marketing'},
-  {name:'meeting-facilitator',cat:'biz',label:'Strategy & Ops'},
-  {name:'newsletter-writer',cat:'copy',label:'Content & Copy'},
-  {name:'objection-handler',cat:'sales',label:'Sales'},
-  {name:'on-page-seo-writer',cat:'mkt',label:'Marketing'},
-  {name:'onboarding-designer',cat:'hr',label:'HR & Career'},
-  {name:'one-on-one-facilitator',cat:'hr',label:'HR & Career'},
-  {name:'operations-manager',cat:'biz',label:'Strategy & Ops'},
-  {name:'paid-ads-manager',cat:'mkt',label:'Marketing'},
-  {name:'performance-reviewer',cat:'hr',label:'HR & Career'},
-  {name:'pitch-deck-designer',cat:'biz',label:'Strategy & Ops'},
-  {name:'pricing-strategist',cat:'sales',label:'Sales'},
-  {name:'privacy-compliance',cat:'legal',label:'Legal'},
-  {name:'process-documenter',cat:'biz',label:'Strategy & Ops'},
-  {name:'product-manager',cat:'biz',label:'Strategy & Ops'},
-  {name:'product-marketing-manager',cat:'mkt',label:'Marketing'},
-  {name:'product-strategist',cat:'biz',label:'Strategy & Ops'},
-  {name:'project-manager',cat:'biz',label:'Strategy & Ops'},
-  {name:'prompt-engineer',cat:'dev',label:'Tech & Dev'},
-  {name:'proposal-writer',cat:'sales',label:'Sales'},
-  {name:'python-pro',cat:'dev',label:'Tech & Dev'},
-  {name:'recruiter',cat:'hr',label:'HR & Career'},
-  {name:'resume-writer',cat:'hr',label:'HR & Career'},
-  {name:'risk-manager',cat:'biz',label:'Strategy & Ops'},
-  {name:'salary-negotiator',cat:'hr',label:'HR & Career'},
-  {name:'sales-automator',cat:'sales',label:'Sales'},
-  {name:'sales-coach',cat:'sales',label:'Sales'},
-  {name:'sales-forecaster',cat:'sales',label:'Sales'},
-  {name:'sales-funnel-optimizer',cat:'sales',label:'Sales'},
-  {name:'sales-page-writer',cat:'copy',label:'Content & Copy'},
-  {name:'search-specialist',cat:'mkt',label:'Marketing'},
-  {name:'seo-analyzer',cat:'mkt',label:'Marketing'},
-  {name:'seo-strategist',cat:'mkt',label:'Marketing'},
-  {name:'social-media-manager',cat:'mkt',label:'Marketing'},
-  {name:'strategic-planning',cat:'biz',label:'Strategy & Ops'},
-  {name:'summarizer',cat:'copy',label:'Content & Copy'},
-  {name:'task-prioritizer',cat:'biz',label:'Strategy & Ops'},
-  {name:'tax-advisor',cat:'data',label:'Data & Finance'},
-  {name:'team-performance-analyst',cat:'hr',label:'HR & Career'},
-  {name:'trend-analyst',cat:'mkt',label:'Marketing'},
-  {name:'ui-reviewer',cat:'dev',label:'Tech & Dev'},
-  {name:'ui-ux-designer',cat:'dev',label:'Tech & Dev'},
-  {name:'user-story-writer',cat:'biz',label:'Strategy & Ops'},
-  {name:'video-scriptwriter',cat:'copy',label:'Content & Copy'},
-  {name:'visual-art-director',cat:'mkt',label:'Marketing'},
-  {name:'workflow-automator',cat:'biz',label:'Strategy & Ops'},
-];
-
-const catColors = {dev:'badge-dev',mkt:'badge-mkt',copy:'badge-copy',sales:'badge-copy',biz:'badge-biz',data:'badge-data',hr:'badge-biz',legal:'badge-dev'};
-
-function renderAgents(filter) {
-  const grid = document.getElementById('agentGrid');
-  const filtered = filter === 'all' ? agents : agents.filter(a => a.cat === filter);
-  grid.innerHTML = filtered.map(a => `
-    <div class="agent-chip">
-      <div class="agent-chip-name">${a.name.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase())}</div>
-      <span class="badge ${catColors[a.cat]||'badge-biz'}">${a.label}</span>
-    </div>
-  `).join('');
+// HAMBURGER MENU
+function toggleDrawer() {
+  const drawer = document.getElementById('navDrawer');
+  drawer.classList.toggle('open');
 }
-
-function filterAgents(cat, btn) {
-  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderAgents(cat);
+function drawerScrollTo(id) {
+  document.getElementById('navDrawer').classList.remove('open');
+  setTimeout(() => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  }, 80);
 }
-
-renderAgents('all');
+// Close drawer on outside click
+document.addEventListener('click', e => {
+  const drawer = document.getElementById('navDrawer');
+  const hamburger = document.getElementById('hamburger');
+  if (drawer.classList.contains('open') && !drawer.contains(e.target) && !hamburger.contains(e.target)) {
+    drawer.classList.remove('open');
+  }
+});
 
 // TABS
 function switchTab(group, id) {
   document.querySelectorAll(`[data-tab="${group}"]`).forEach(p => p.classList.remove('active'));
   document.querySelector(`[data-tab="${group}"][data-id="${id}"]`).classList.add('active');
-  const tabs = document.getElementById(group+'Tabs') || document.querySelectorAll('.tabs')[['install','use','ex'].indexOf(group)];
-  if (tabs) {
-    const btns = tabs.querySelectorAll('.tab');
+  const tabsEl = document.getElementById(group+'Tabs');
+  if (tabsEl) {
+    const btns = tabsEl.querySelectorAll('.tab');
+    const panels = document.querySelectorAll(`[data-tab="${group}"]`);
     btns.forEach((b,i) => {
-      const panels = document.querySelectorAll(`[data-tab="${group}"]`);
       b.classList.toggle('active', panels[i] && panels[i].dataset.id === id);
     });
   }
@@ -969,22 +925,21 @@ function switchTab(group, id) {
 
 // FAQ
 function toggleFaq(btn) {
-  const item = btn.closest('.faq-item');
-  item.classList.toggle('open');
+  btn.closest('.faq-item').classList.toggle('open');
 }
 
 // COPY CODE
 function copyCode(btn, id) {
   const el = document.getElementById(id);
   if (!el) return;
-  navigator.clipboard.writeText(el.textContent).then(() => {
+  navigator.clipboard.writeText(el.textContent.trim()).then(() => {
     btn.textContent = 'Copied!';
     btn.classList.add('copied');
     setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
   });
 }
 
-// SMOOTH SCROLL
+// SMOOTH SCROLL (desktop nav)
 function scrollTo(id) {
   const el = document.getElementById(id);
   if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
@@ -1000,34 +955,23 @@ window.addEventListener('scroll', () => {
 // FADE IN ON SCROLL
 const obs = new IntersectionObserver(entries => {
   entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
-}, {threshold: 0.1});
+}, {threshold: 0.08});
 document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
 
 // TOC ACTIVE STATE
-const sections = ['what','install','use','agents','examples','faq'];
 const tocLinks = document.querySelectorAll('.toc-link');
+const sectionIds = ['what','install','use','agents','examples','faq'];
 window.addEventListener('scroll', () => {
   let current = '';
-  sections.forEach(id => {
+  sectionIds.forEach(id => {
     const el = document.getElementById(id);
     if (el && window.scrollY >= el.offsetTop - 120) current = id;
   });
-  tocLinks.forEach(l => {
-    l.classList.toggle('active', l.getAttribute('href') === '#'+current);
-  });
-});
-
-// NAV ACTIVE
-const navLinks = document.querySelectorAll('.nav-link');
-window.addEventListener('scroll', () => {
-  let current = '';
-  ['what','install','use','agents','examples','faq'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el && window.scrollY >= el.offsetTop - 120) current = id;
-  });
-  navLinks.forEach((l,i) => {
-    const ids = ['install','install','use','agents','examples','faq'];
-    l.classList.toggle('active', ids[i] === current);
+  tocLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#'+current));
+  // Desktop nav buttons
+  document.querySelectorAll('.nav-links .nav-link').forEach((l,i) => {
+    const map = ['install','install','use','agents','examples','faq'];
+    l.classList.toggle('active', map[i] === current);
   });
 });
 </script>
