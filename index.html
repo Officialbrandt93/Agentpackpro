@@ -81,6 +81,50 @@ header{
 .hero-bar h1 em{font-style:normal;color:var(--lime);}
 .hero-bar p{font-size:15px;color:var(--fg2);max-width:520px;margin:0 auto;}
 
+/* HERO GUIDE BUTTON */
+.hero-guide-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  position: relative; overflow: hidden;
+  margin-top: 28px;
+  padding: 14px 28px;
+  background: var(--lime);
+  color: #000;
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 10px;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  box-shadow: 0 0 0 0 rgba(200,255,0,0.5);
+  animation: hero-btn-pulse 2.5s ease-in-out infinite;
+  transition: transform 0.18s, box-shadow 0.18s;
+}
+.hero-guide-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 32px rgba(200,255,0,0.35);
+  animation: none;
+}
+.hero-guide-btn:active { transform: scale(0.98); }
+.hero-guide-btn-glow {
+  position: absolute; inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.3) 50%, transparent 60%);
+  transform: translateX(-100%);
+  animation: hero-btn-shine 2.5s ease-in-out infinite;
+}
+.hero-guide-btn-arrow {
+  font-size: 17px;
+  transition: transform 0.18s;
+}
+.hero-guide-btn:hover .hero-guide-btn-arrow { transform: translateX(4px); }
+@keyframes hero-btn-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(200,255,0,0.55); }
+  50% { box-shadow: 0 0 0 10px rgba(200,255,0,0); }
+}
+@keyframes hero-btn-shine {
+  0% { transform: translateX(-100%); }
+  30%, 100% { transform: translateX(200%); }
+}
+
 /* SEARCH + FILTER */
 .controls{padding:24px 40px;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:65px;z-index:99;}
 .search-row{display:flex;gap:12px;margin-bottom:16px;}
@@ -356,7 +400,7 @@ header{
     <div class="logo-icon">C</div>
     <div class="logo-text">Agents <span>Pro Pack</span></div>
   </a>
-  <div class="header-right"><button class="guide-btn" onclick="openGuide()">📖 Installation Guide</button>
+  <div class="header-right"><a class="guide-btn" href="https://agentpackpro.vercel.app/agents_guide" target="_blank">📖 Installation Guide</a>
     <div class="agent-count-badge">⚡ 102 Agents Ready</div>
   </div>
 </header>
@@ -364,6 +408,12 @@ header{
 <div class="hero-bar">
   <h1>Your <em>AI Specialist Team</em> is Ready.</h1>
   <p>Find the right agent, copy it in one click, and paste into Claude. Expert output from message one — no setup, no configuration.</p>
+  <a href="https://agentpackpro.vercel.app/agents_guide" target="_blank" class="hero-guide-btn">
+    <span class="hero-guide-btn-glow"></span>
+    <span class="hero-guide-btn-icon">📖</span>
+    <span class="hero-guide-btn-text">Installation Guide</span>
+    <span class="hero-guide-btn-arrow">→</span>
+  </a>
 </div>
 
 <div class="controls">
