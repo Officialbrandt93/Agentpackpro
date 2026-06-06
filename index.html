@@ -199,6 +199,14 @@ header{
   display:flex;align-items:center;justify-content:center;
 }
 .btn-preview:hover{border-color:var(--lime);color:var(--lime);}
+.btn-download{
+  background:var(--bg4);color:var(--fg2);border:1px solid var(--border2);
+  padding:9px 14px;font-size:12px;font-weight:700;
+  border-radius:6px;cursor:pointer;transition:all 0.2s;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  white-space:nowrap;
+}
+.btn-download:hover{border-color:var(--lime);color:var(--lime);background:rgba(200,255,0,0.06);}
 
 /* EMPTY STATE */
 .empty-state{
@@ -241,11 +249,18 @@ header{
   padding:16px 24px;border-top:1px solid var(--border);
   display:flex;gap:10px;
 }
-.modal-copy-btn{
-  flex:1;background:var(--lime);color:#000;border:none;
+.modal-copy-btn,
+.modal-download-btn{
+  flex:1;border:none;
   padding:12px;font-weight:700;font-size:14px;border-radius:8px;cursor:pointer;
+  transition:all 0.2s;
 }
+.modal-copy-btn{background:var(--lime);color:#000;}
+.modal-copy-btn:hover{background:#b8ee00;}
 .modal-copy-btn.copied{background:#10B981;color:#fff;}
+.modal-download-btn{background:var(--bg4);color:var(--fg);border:1px solid var(--border2);}
+.modal-download-btn:hover{border-color:var(--lime);color:var(--lime);background:rgba(200,255,0,0.06);}
+@media(max-width:520px){.modal-footer{flex-direction:column;}.agent-actions{flex-wrap:wrap;}.btn-copy{min-width:100%;}}
 
 /* TOAST */
 .toast{
@@ -471,6 +486,7 @@ header{
     </div>
     <div class="modal-footer">
       <button class="modal-copy-btn" id="modal-copy-btn" onclick="copyFromModal()">⚡ Copy Agent to Clipboard</button>
+      <button class="modal-download-btn" id="modal-download-btn" onclick="downloadFromModal()">⬇ Download .md</button>
     </div>
   </div>
 </div>
@@ -540,6 +556,7 @@ function renderCards() {
       <div class="agent-desc">${agent.desc || 'Specialized AI agent ready to deploy.'}</div>
       <div class="agent-actions">
         <button class="btn-copy" onclick="copyAgent(event,'${agent.name}')">⚡ Copy Agent</button>
+        <button class="btn-download" onclick="downloadAgent(event,'${agent.name}')">⬇ .md</button>
         <button class="btn-preview" onclick="previewAgent(event,'${agent.name}')">👁</button>
       </div>
     `;
@@ -561,6 +578,42 @@ function copyAgent(e, name) {
       btn.classList.remove('copied');
     }, 2000);
   });
+}
+
+function getAgentFileName(agent) {
+  const baseName = (agent.name || agent.display || 'agent')
+    .toString()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  return (baseName || 'agent') + '.md';
+}
+
+function downloadAgentFile(name) {
+  const agent = AGENTS.find(a => a.name === name);
+  if (!agent) return;
+
+  const blob = new Blob([agent.content], { type: 'text/markdown;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+
+  link.href = url;
+  link.download = getAgentFileName(agent);
+  link.style.display = 'none';
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+
+  showToast('✓ .md download started.');
+}
+
+function downloadAgent(e, name) {
+  e.stopPropagation();
+  downloadAgentFile(name);
 }
 
 function previewAgent(e, name) {
@@ -590,6 +643,11 @@ function copyFromModal() {
   });
 }
 
+function downloadFromModal() {
+  const name = document.getElementById('modal-overlay')._agentName;
+  downloadAgentFile(name);
+}
+
 function closeModal(e) {
   if (e.target === document.getElementById('modal-overlay')) closeModalDirect();
 }
@@ -597,10 +655,15 @@ function closeModalDirect() {
   document.getElementById('modal-overlay').classList.remove('open');
 }
 
-function showToast() {
+function showToast(message) {
   const t = document.getElementById('toast');
+  const defaultMessage = '✓ Agent copied! Paste into Claude Projects.';
+  t.textContent = message || defaultMessage;
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
+  setTimeout(() => {
+    t.classList.remove('show');
+    t.textContent = defaultMessage;
+  }, 2500);
 }
 
 // Filters
