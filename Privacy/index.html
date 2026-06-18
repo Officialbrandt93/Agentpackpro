@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Privacy Policy — Skills Pack AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --lime: #C8FF00;
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --border: rgba(255,255,255,0.08);
+      --text: #e0e0e0;
+      --muted: #888;
+    }
+    body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; line-height: 1.8; padding: 0; }
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo { font-size: 16px; font-weight: 700; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+    .logo-icon { width: 32px; height: 32px; background: var(--lime); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; color: #000; }
+    .logo span { color: var(--lime); }
+    .back-link { font-size: 13px; color: var(--muted); text-decoration: none; }
+    .back-link:hover { color: var(--lime); }
+    .container { max-width: 760px; margin: 0 auto; padding: 60px 24px 100px; }
+    .doc-header { margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+    .doc-badge { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; background: rgba(200,255,0,0.1); color: var(--lime); border: 1px solid rgba(200,255,0,0.2); border-radius: 20px; padding: 4px 14px; margin-bottom: 16px; }
+    h1 { font-size: 32px; font-weight: 800; color: #fff; margin-bottom: 12px; }
+    .doc-meta { font-size: 13px; color: var(--muted); }
+    h2 { font-size: 18px; font-weight: 700; color: #fff; margin: 40px 0 14px; }
+    h2::before { content: ''; display: inline-block; width: 4px; height: 18px; background: var(--lime); border-radius: 2px; margin-right: 10px; vertical-align: middle; }
+    p { font-size: 15px; color: var(--text); margin-bottom: 16px; }
+    ul { margin: 12px 0 20px 20px; }
+    ul li { font-size: 15px; color: var(--text); margin-bottom: 8px; }
+    a { color: var(--lime); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .highlight-box { background: rgba(200,255,0,0.05); border: 1px solid rgba(200,255,0,0.15); border-radius: 10px; padding: 18px 22px; margin: 24px 0; font-size: 14px; color: var(--text); }
+    .footer-doc { margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 13px; color: var(--muted); text-align: center; }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="./index.html" class="logo">
+    <div class="logo-icon">C</div>
+    Agents <span>Pro Pack</span>
+  </a>
+  <a href="./index.html" class="back-link">← Back to platform</a>
+</div>
+
+<div class="container">
+  <div class="doc-header">
+    <div class="doc-badge">Legal</div>
+    <h1>Privacy Policy</h1>
+    <p class="doc-meta">Skills Pack AI &nbsp;·&nbsp; Last updated: June 2026 &nbsp;·&nbsp; Effective date: June 2026</p>
+  </div>
+
+  <div class="highlight-box">
+    This Privacy Policy explains how Skills Pack AI ("we", "us", or "our") collects, uses, and protects the personal information of users who purchase and access our products, including the Claude Agents Pro Pack platform.
+  </div>
+
+  <h2>1. Who We Are</h2>
+  <p>Skills Pack AI is a digital education business that creates and distributes AI productivity tools and resources. Our primary product is the Claude Agents Pro Pack, accessible at agentpackpro.vercel.app. For any privacy-related inquiries, contact us at <a href="mailto:contact@skillspackai.com">contact@skillspackai.com</a>.</p>
+
+  <h2>2. Data We Collect</h2>
+  <p>We collect only the minimum data necessary to deliver our product and fulfill our obligations to you:</p>
+  <ul>
+    <li><strong>Full name</strong> — provided at the time of purchase</li>
+    <li><strong>Email address</strong> — used to verify access to the platform</li>
+    <li><strong>Purchase data</strong> — transaction ID, product purchased, payment status (processed by PerfectPay)</li>
+    <li><strong>Access logs</strong> — timestamp of platform access (stored in Supabase)</li>
+  </ul>
+  <p>We do not collect passwords, payment card data, or sensitive personal information. Payment processing is handled entirely by PerfectPay and is subject to their privacy policy.</p>
+
+  <h2>3. How We Use Your Data</h2>
+  <p>Your data is used exclusively for:</p>
+  <ul>
+    <li>Verifying and granting access to the platform after a confirmed purchase</li>
+    <li>Sending transactional emails (access confirmation, platform updates) via Brevo</li>
+    <li>Revoking access in the event of a refund or chargeback</li>
+    <li>Preventing unauthorized access and fraudulent use</li>
+  </ul>
+  <p>We do not use your data for advertising, profiling, or any purpose beyond delivering the product you purchased.</p>
+
+  <h2>4. Data Storage & Third-Party Services</h2>
+  <p>We use the following third-party services to operate our platform:</p>
+  <ul>
+    <li><strong>Supabase</strong> (supabase.com) — stores your email and name for access control. Servers are located in the United States (Oregon region).</li>
+    <li><strong>Brevo</strong> (brevo.com) — sends transactional emails. Processes your name and email address.</li>
+    <li><strong>PerfectPay</strong> (perfectpay.com.br) — processes payments. We receive purchase confirmation data only.</li>
+    <li><strong>Vercel</strong> (vercel.com) — hosts our platform. May log IP addresses for security purposes.</li>
+    <li><strong>Meta Platforms (Facebook/Instagram)</strong> — we use the Meta Pixel on our sales and login pages for advertising measurement and remarketing. Meta may collect browsing behavior data in accordance with their Data Policy.</li>
+    <li><strong>Google LLC</strong> — we use Google Ads tags for conversion tracking and remarketing. Google may collect browsing behavior data in accordance with their Privacy Policy.</li>
+  </ul>
+  <p>Each of these providers maintains their own privacy policies and data protection measures.</p>
+
+  <h2>5. Data Retention</h2>
+  <p>We retain your data for as long as you have active access to the platform. If you request deletion of your account or receive a full refund, your data will be removed from our database within 7 business days.</p>
+
+  <h2>6. Your Rights</h2>
+  <p>Depending on your location, you may have the following rights regarding your personal data:</p>
+  <ul>
+    <li><strong>Access</strong> — request a copy of the data we hold about you</li>
+    <li><strong>Correction</strong> — request correction of inaccurate data</li>
+    <li><strong>Deletion</strong> — request deletion of your data ("right to be forgotten")</li>
+    <li><strong>Portability</strong> — receive your data in a structured, machine-readable format</li>
+    <li><strong>Objection</strong> — object to processing of your data in certain circumstances</li>
+  </ul>
+  <p>To exercise any of these rights, email us at <a href="mailto:contact@skillspackai.com">contact@skillspackai.com</a>. We will respond within 15 business days.</p>
+
+  <h2>7. GDPR (European Users)</h2>
+  <p>If you are located in the European Economic Area (EEA), our legal basis for processing your personal data is the performance of a contract — specifically, to fulfill your purchase and deliver access to the platform. We do not transfer your data outside of services that maintain adequate data protection standards.</p>
+
+  <h2>8. LGPD (Brazilian Users)</h2>
+  <p>If you are located in Brazil, we process your personal data in accordance with the Lei Geral de Proteção de Dados (LGPD — Law No. 13,709/2018). The legal basis for processing is contract performance and our legitimate interest in preventing fraud. You may exercise your rights under the LGPD by contacting us at <a href="mailto:contact@skillspackai.com">contact@skillspackai.com</a>.</p>
+
+  <h2>9. CCPA (California Users)</h2>
+  <p>If you are a California resident, you have the right to know what personal information we collect, to request deletion, and to opt out of the sale of your data. We do not sell personal information to third parties.</p>
+
+  <h2>10. Cookies & Tracking Technologies</h2>
+  <p>Our platform uses browser localStorage (not traditional cookies) solely to maintain your login session for up to 24 hours.</p>
+  <p>In addition, we use the following third-party tracking technologies on our sales pages and access area:</p>
+  <ul>
+    <li><strong>Meta Pixel (Facebook/Instagram)</strong> — We use the Meta Pixel to measure the effectiveness of our advertising campaigns and to show relevant ads to people who have visited our pages. The Meta Pixel may collect your IP address, browser type, pages visited, and actions taken on our site. This data is processed by Meta Platforms, Inc. in accordance with their <a href="https://www.facebook.com/privacy/policy/" target="_blank" rel="noopener">Data Policy</a>. You can opt out of Meta's ad tracking at <a href="https://www.facebook.com/adpreferences" target="_blank" rel="noopener">facebook.com/adpreferences</a>.</li>
+    <li><strong>Google Ads Tag (Google)</strong> — We use Google's advertising tag to track conversions from our Google Ads campaigns and to enable remarketing. Google may collect information about your visit including pages viewed and actions taken. This data is processed by Google LLC in accordance with their <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Privacy Policy</a>. You can manage Google ad personalization at <a href="https://adssettings.google.com" target="_blank" rel="noopener">adssettings.google.com</a>.</li>
+  </ul>
+  <p>These tracking technologies are active on our public-facing pages (sales page and login page). They operate under a legitimate interest basis for advertising measurement. If you are located in the European Economic Area (EEA) and object to this processing, you may opt out using the links above or by using a browser extension such as uBlock Origin or the <a href="https://optout.aboutads.info/" target="_blank" rel="noopener">Digital Advertising Alliance opt-out tool</a>.</p>
+
+  <h2>11. Security</h2>
+  <p>We implement technical measures to protect your data, including row-level security in our database, API key restrictions, rate limiting on login attempts, and HTTPS encryption across all pages. No system is completely secure, but we take reasonable steps to protect your information.</p>
+
+  <h2>12. Children's Privacy</h2>
+  <p>Our platform is intended for users 18 years of age or older. We do not knowingly collect personal information from children under 18. If you believe we have inadvertently collected such information, please contact us immediately.</p>
+
+  <h2>13. Changes to This Policy</h2>
+  <p>We may update this Privacy Policy from time to time. When we do, we will update the "Last updated" date at the top of this page. Continued use of the platform after changes constitutes acceptance of the updated policy.</p>
+
+  <h2>14. Contact</h2>
+  <p>For any questions about this Privacy Policy or how we handle your data, contact us at:<br>
+  <a href="mailto:contact@skillspackai.com">contact@skillspackai.com</a></p>
+
+  <div class="footer-doc">
+    © 2026 Skills Pack AI · <a href="./terms.html">Terms of Use</a> · <a href="./refund.html">Refund Policy</a>
+  </div>
+</div>
+
+</body>
+</html>
