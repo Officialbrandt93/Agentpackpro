@@ -11,13 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    /* ===================== CONFIGURAÇÃO — edite esses dois valores ===================== */
-    /* Copie do Supabase: Settings → API */
-
-    /* ================================================================================== */
-
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
       --lime: #C8FF00;
       --lime-dim: #a8d800;
@@ -30,7 +24,6 @@
       --text-muted: #888;
       --red: #ff4d4d;
     }
-
     body {
       background: var(--bg);
       color: var(--text);
@@ -42,7 +35,6 @@
       padding: 1.5rem 1rem;
       position: relative;
     }
-
     body::before {
       content: '';
       position: fixed;
@@ -52,7 +44,6 @@
       background: radial-gradient(ellipse, rgba(200,255,0,0.07) 0%, transparent 70%);
       pointer-events: none;
     }
-
     .grid-bg {
       position: fixed; inset: 0;
       background-image:
@@ -62,7 +53,6 @@
       pointer-events: none;
       z-index: 0;
     }
-
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -73,14 +63,12 @@
       position: relative;
       z-index: 1;
     }
-
     .logo-row {
       display: flex;
       align-items: center;
       gap: 10px;
       margin-bottom: 2rem;
     }
-
     .logo-icon {
       width: 36px; height: 36px;
       background: var(--lime);
@@ -91,10 +79,8 @@
       color: #0a0a0a;
       flex-shrink: 0;
     }
-
     .logo-text { font-size: 16px; font-weight: 700; }
     .logo-text span { color: var(--lime); }
-
     h1 {
       font-size: 26px;
       font-weight: 800;
@@ -102,14 +88,12 @@
       margin-bottom: 0.5rem;
     }
     h1 em { color: var(--lime); font-style: normal; }
-
     .subtitle {
       font-size: 14px;
       color: var(--text-muted);
       margin-bottom: 2rem;
       line-height: 1.6;
     }
-
     label {
       display: block;
       font-size: 13px;
@@ -119,7 +103,6 @@
       letter-spacing: 0.05em;
       text-transform: uppercase;
     }
-
     input[type="email"] {
       width: 100%;
       background: var(--surface2);
@@ -133,14 +116,11 @@
       transition: border-color 0.2s;
       margin-bottom: 1rem;
     }
-
     input[type="email"]:focus {
       border-color: var(--border-lime);
       box-shadow: 0 0 0 3px rgba(200,255,0,0.08);
     }
-
     input[type="email"]::placeholder { color: #444; }
-
     .btn {
       width: 100%;
       background: var(--lime);
@@ -158,13 +138,10 @@
       gap: 8px;
       transition: background 0.2s, transform 0.1s;
     }
-
     .btn:hover { background: #d4ff1a; }
     .btn:active { transform: scale(0.98); }
     .btn:disabled { background: #3a4a00; color: #6a7a00; cursor: not-allowed; transform: none; }
-
     .btn svg { width: 16px; height: 16px; }
-
     .spinner {
       width: 18px; height: 18px;
       border: 2px solid rgba(0,0,0,0.3);
@@ -173,7 +150,6 @@
       animation: spin 0.7s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-
     .msg {
       display: none;
       margin-top: 1rem;
@@ -182,7 +158,6 @@
       font-size: 14px;
       line-height: 1.5;
     }
-
     .msg.error {
       display: flex;
       gap: 8px;
@@ -190,7 +165,6 @@
       border: 1px solid rgba(255,77,77,0.25);
       color: #ff8080;
     }
-
     .msg.success {
       display: flex;
       gap: 8px;
@@ -198,25 +172,18 @@
       border: 1px solid rgba(200,255,0,0.25);
       color: var(--lime);
     }
-
     .divider {
       height: 1px;
       background: var(--border);
       margin: 1.75rem 0;
     }
-
     .footer-note {
       font-size: 13px;
       color: var(--text-muted);
       text-align: center;
       line-height: 1.6;
     }
-
-    .footer-note a {
-      color: var(--lime);
-      text-decoration: none;
-    }
-
+    .footer-note a { color: var(--lime); text-decoration: none; }
     .terms-note {
       font-size: 11px;
       color: var(--text-muted);
@@ -225,7 +192,6 @@
       margin-top: 10px;
       opacity: 0.6;
     }
-
     .access-granted {
       display: none;
       text-align: center;
@@ -239,16 +205,8 @@
       margin: 0 auto 1.25rem;
       font-size: 28px;
     }
-    .access-granted h2 {
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-    .access-granted p {
-      font-size: 14px;
-      color: var(--text-muted);
-      margin-bottom: 1.5rem;
-    }
+    .access-granted h2 { font-size: 20px; font-weight: 700; margin-bottom: 0.5rem; }
+    .access-granted p { font-size: 14px; color: var(--text-muted); margin-bottom: 1.5rem; }
     .btn-goto {
       width: 100%;
       background: var(--lime);
@@ -266,26 +224,40 @@
       transition: background 0.2s;
     }
     .btn-goto:hover { background: #d4ff1a; }
-
-    @media (max-width: 480px) {
-      .card { padding: 2rem 1.5rem; }
-      h1 { font-size: 22px; }
+    /* Rate limit warning */
+    .rate-limit-msg {
+      display: none;
+      margin-top: 1rem;
+      padding: 14px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.6;
+      background: rgba(255,160,0,0.1);
+      border: 1px solid rgba(255,160,0,0.25);
+      color: #ffb347;
+      text-align: center;
     }
-
-    /* VIDEO SECTION */
-    .video-section {
-      margin-bottom: 1.75rem;
-    }
-    .video-label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .attempts-badge {
+      display: inline-block;
       font-size: 11px;
-      font-weight: 700;
+      background: rgba(255,77,77,0.15);
+      border: 1px solid rgba(255,77,77,0.25);
+      color: #ff8080;
+      border-radius: 20px;
+      padding: 3px 10px;
+      margin-top: 8px;
+    }
+    .video-section { margin-bottom: 1.5rem; }
+    .video-label {
+      font-size: 11px;
+      font-weight: 600;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--lime);
+      color: var(--text-muted);
       margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
     }
     .video-label-dot {
       width: 6px; height: 6px;
@@ -299,17 +271,13 @@
       overflow: hidden;
       border: 1px solid rgba(200,255,0,0.2);
       background: #000;
-      box-shadow: 0 0 0 0 rgba(200,255,0,0);
       animation: video-glow 3s ease-in-out infinite;
     }
     @keyframes video-glow {
       0%,100% { box-shadow: 0 0 12px rgba(200,255,0,0.08); }
       50%      { box-shadow: 0 0 28px rgba(200,255,0,0.18); }
     }
-    .video-wrapper wistia-player {
-      display: block;
-      width: 100%;
-    }
+    .video-wrapper wistia-player { display: block; width: 100%; }
   </style>
 </head>
 <body>
@@ -317,13 +285,11 @@
 
   <div class="card">
 
-    <!-- Logo -->
     <div class="logo-row">
       <div class="logo-icon">C</div>
       <div class="logo-text">Agents <span>Pro Pack</span></div>
     </div>
 
-    <!-- Vídeo de boas-vindas -->
     <div class="video-section">
       <div class="video-label">
         <span class="video-label-dot"></span>
@@ -334,7 +300,6 @@
       </div>
     </div>
 
-    <!-- Formulário de login -->
     <div id="login-form">
       <h1>Seu time de <em>IA</em><br>espera por você.</h1>
       <p class="subtitle">Digite o email que você usou na compra para liberar o acesso aos 102 agents.</p>
@@ -342,12 +307,17 @@
       <label for="email">Seu email de compra</label>
       <input type="email" id="email" placeholder="Enter your email" autocomplete="email" />
 
-      <button class="btn" id="btn-check" onclick="verificarAcesso()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Verify access</button>
+      <button class="btn" id="btn-check" onclick="verificarAcesso()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Verify access
+      </button>
 
       <div class="msg error" id="msg-error">
         <span>⚠</span>
-        <span id="msg-error-text">Este email não tem acesso. Verifique se usou o email correto na compra, ou <a href="https://wa.me/SEU_NUMERO" target="_blank" style="color:var(--lime)">fale conosco</a>.</span>
+        <span id="msg-error-text"></span>
       </div>
+
+      <div class="rate-limit-msg" id="rate-limit-msg"></div>
 
       <div class="divider"></div>
 
@@ -357,158 +327,205 @@
       <p class="terms-note">By accessing, you agree that refunds immediately terminate your access to the platform.</p>
     </div>
 
-    <!-- Tela de acesso liberado -->
     <div class="access-granted" id="access-granted">
       <div class="check-circle">✓</div>
       <h2>Access granted!</h2>
-      <p id="welcome-text">Welcome ao Agents Pro Pack.</p>
-      <a href="./index.html" class="btn-goto">
-        ⚡ Access os agents
-      </a>
+      <p id="welcome-text">Welcome to Agents Pro Pack.</p>
+      <a href="./index.html" class="btn-goto">⚡ Access the agents</a>
     </div>
 
   </div>
 
   <script>
     // ============================================================
-    // CONFIGURE AQUI — substitua pelos seus valores do Supabase
-    // Settings → API no painel do Supabase
+    // CONFIGURE AQUI
     // ============================================================
-    const SUPABASE_URL  = 'https://hllvickhpupohgirqzhx.supabase.co';
-    const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsbHZpY2tocHVwb2hnaXJxemh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMTYzOTAsImV4cCI6MjA5NTc5MjM5MH0.hd6ZG-cH2nkqHG4oTroUiNWnBOjZYFhCmPCo-pZy9JQ';
+    const SUPABASE_URL = 'https://hllvickhpupohgirqzhx.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsbHZpY2tocHVwb2hnaXJxemh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMTYzOTAsImV4cCI6MjA5NTc5MjM5MH0.hd6ZG-cH2nkqHG4oTroUiNWnBOjZYFhCmPCo-pZy9JQ';
     // ============================================================
+
+    // ── RATE LIMIT CONFIG ──────────────────────────────────────
+    const MAX_ATTEMPTS   = 5;      // tentativas antes de bloquear
+    const LOCKOUT_MS     = 15 * 60 * 1000; // 15 minutos de bloqueio
+    const MIN_DELAY_MS   = 800;    // delay mínimo por tentativa (dificulta bots)
+    // ──────────────────────────────────────────────────────────
 
     let db = null;
 
     function iniciarSupabase() {
-      if (!window.supabase || !window.supabase.createClient) {
-        console.error('[Supabase] Biblioteca não carregou. Verifique CDN, conexão ou bloqueadores.');
-        mostrarErro('Não foi possível carregar a conexão. Atualize a página e tente novamente.');
+      if (!window.supabase?.createClient) {
+        mostrarErro('Connection error. Refresh the page and try again.');
         return null;
       }
-
-      const { createClient } = window.supabase;
-
-      return createClient(SUPABASE_URL, SUPABASE_KEY, {
-        auth: {
-          persistSession: false,
-          autoRefreshToken: false,
-          detectSessionInUrl: false
-        }
+      return window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+        auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
       });
     }
 
     db = iniciarSupabase();
 
-    // Verifica se já tem sessão salva
-    window.addEventListener('DOMContentLoaded', () => {
-      const sessao = JSON.parse(localStorage.getItem('agp_sessao') || 'null');
-      if (sessao && sessao.expira > Date.now()) {
-        mostrarAcessoLiberado(sessao.email);
+    // ── RATE LIMIT HELPERS ─────────────────────────────────────
+    function getRateLimit() {
+      try {
+        return JSON.parse(localStorage.getItem('agp_rl') || '{"count":0,"since":0}');
+      } catch { return { count: 0, since: 0 }; }
+    }
+
+    function setRateLimit(data) {
+      localStorage.setItem('agp_rl', JSON.stringify(data));
+    }
+
+    function checkRateLimit() {
+      const rl = getRateLimit();
+      const now = Date.now();
+      // Reset se o lockout já expirou
+      if (rl.count >= MAX_ATTEMPTS && (now - rl.since) > LOCKOUT_MS) {
+        setRateLimit({ count: 0, since: 0 });
+        return { blocked: false };
       }
+      if (rl.count >= MAX_ATTEMPTS) {
+        const remaining = Math.ceil((LOCKOUT_MS - (now - rl.since)) / 60000);
+        return { blocked: true, remaining };
+      }
+      return { blocked: false, attempts: rl.count };
+    }
+
+    function incrementAttempts() {
+      const rl = getRateLimit();
+      const now = Date.now();
+      const newCount = rl.count + 1;
+      setRateLimit({ count: newCount, since: rl.since || now });
+      return newCount;
+    }
+
+    function resetAttempts() {
+      setRateLimit({ count: 0, since: 0 });
+    }
+
+    function sanitizeEmail(raw) {
+      return raw.trim().toLowerCase().replace(/[<>"'`;]/g, '');
+    }
+    // ──────────────────────────────────────────────────────────
+
+    window.addEventListener('DOMContentLoaded', () => {
+      // Verifica sessão salva
+      try {
+        const sessao = JSON.parse(localStorage.getItem('agp_sessao') || 'null');
+        if (sessao && sessao.expira > Date.now()) {
+          mostrarAcessoLiberado(sessao.email, sessao.nome);
+          return;
+        }
+      } catch {}
+
+      // Verifica se está bloqueado ao carregar
+      const rl = checkRateLimit();
+      if (rl.blocked) mostrarRateLimit(rl.remaining);
     });
 
-    // Enter no campo de email
     document.getElementById('email').addEventListener('keydown', e => {
       if (e.key === 'Enter') verificarAcesso();
     });
 
     async function verificarAcesso() {
-      const emailInput = document.getElementById('email');
-      const email = emailInput.value.trim().toLowerCase();
-      const btn = document.getElementById('btn-check');
-      const msgError = document.getElementById('msg-error');
+      const emailRaw = document.getElementById('email').value;
+      const email    = sanitizeEmail(emailRaw);
+      const btn      = document.getElementById('btn-check');
 
-      msgError.style.display = 'none';
+      esconderErro();
 
-      if (!email || !email.includes('@')) {
+      // 1. Validação básica
+      if (!email || !email.includes('@') || !email.includes('.')) {
         mostrarErro('Enter a valid email address.');
         return;
       }
 
-      // Estado de carregamento
+      // 2. Checar rate limit
+      const rl = checkRateLimit();
+      if (rl.blocked) {
+        mostrarRateLimit(rl.remaining);
+        return;
+      }
+
+      // 3. Loading state
       btn.disabled = true;
       btn.innerHTML = '<div class="spinner"></div> Checking...';
+
+      // 4. Delay mínimo (dificulta automação)
+      const startTime = Date.now();
 
       try {
         if (!db) {
           db = iniciarSupabase();
-          if (!db) throw new Error('Supabase client não inicializado.');
+          if (!db) throw new Error('Supabase not initialized.');
         }
 
-        // IMPORTANTE:
-        // No Supabase/Postgres, o nome da tabela precisa bater com o nome real.
-        // Como sua tabela foi criada como "Compradores" com C maiúsculo,
-        // usamos exatamente .from('Compradores').
-        // O .ilike() evita erro caso o email tenha sido salvo com letras maiúsculas/minúsculas diferentes.
-        let { data, error } = await db
-          .from('Compradores')
-          .select('email, nome')
-          .ilike('email', email)
-          .limit(1)
-          .maybeSingle();
+        // 5. Usa RPC check_access para não expor a tabela diretamente
+        //    Se a função não existir ainda, faz fallback para query direta
+        let acesso = false;
+        let nome   = '';
 
-        // Fallback: se no Supabase a tabela tiver sido criada toda minúscula via SQL,
-        // tenta novamente em "compradores".
-        const tabelaNaoExiste = error && (
-          error.code === '42P01' ||
-          String(error.message || '').toLowerCase().includes('does not exist') ||
-          String(error.details || '').toLowerCase().includes('does not exist')
-        );
-
-        if (tabelaNaoExiste) {
-          console.warn('[Supabase] Tabela "Compradores" não encontrada. Tentando "compradores"...', error);
-
-          const tentativaMinuscula = await db
-            .from('compradores')
+        try {
+          const { data: rpcData, error: rpcError } = await db.rpc('check_access', { p_email: email });
+          if (!rpcError) {
+            acesso = !!rpcData;
+          } else {
+            throw rpcError;
+          }
+        } catch (rpcErr) {
+          // Fallback: query direta (menos seguro, mas funcional enquanto não cria a RPC)
+          console.warn('[Security] RPC check_access não encontrada, usando fallback direto.');
+          const { data, error } = await db
+            .from('Compradores')
             .select('email, nome')
             .ilike('email', email)
             .limit(1)
             .maybeSingle();
 
-          data = tentativaMinuscula.data;
-          error = tentativaMinuscula.error;
+          if (error) throw error;
+          acesso = !!data;
+          nome   = data?.nome || '';
         }
 
-        if (error) {
-          console.error('[Supabase] Erro ao consultar acesso:', {
-            code: error.code,
-            message: error.message,
-            details: error.details,
-            hint: error.hint
-          });
-          throw error;
+        // 6. Garantir delay mínimo
+        const elapsed = Date.now() - startTime;
+        if (elapsed < MIN_DELAY_MS) {
+          await new Promise(r => setTimeout(r, MIN_DELAY_MS - elapsed));
         }
 
-        if (data) {
-          // Email encontrado — salva sessão por 24h
-          const sessao = {
-            email: data.email,
-            nome: data.nome || '',
-            expira: Date.now() + (24 * 60 * 60 * 1000)
-          };
+        if (acesso) {
+          resetAttempts();
+          const sessao = { email, nome, expira: Date.now() + (24 * 60 * 60 * 1000) };
           localStorage.setItem('agp_sessao', JSON.stringify(sessao));
-          mostrarAcessoLiberado(data.email, data.nome);
+          mostrarAcessoLiberado(email, nome);
         } else {
-          mostrarErro('Este email não encontrado. Verifique se usou o email correto na compra.');
+          const count = incrementAttempts();
+          const restantes = MAX_ATTEMPTS - count;
+
+          if (restantes <= 0) {
+            mostrarRateLimit(15);
+          } else {
+            mostrarErro(
+              `Email not found. Check if you used the correct email.` +
+              (restantes <= 2 ? ` (${restantes} attempt${restantes > 1 ? 's' : ''} remaining)` : '')
+            );
+          }
+
           btn.disabled = false;
           btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Verify access';
         }
+
       } catch (err) {
-        console.error('[Login] Falha completa:', err);
+        // Garantir delay mesmo em erro
+        const elapsed = Date.now() - startTime;
+        if (elapsed < MIN_DELAY_MS) await new Promise(r => setTimeout(r, MIN_DELAY_MS - elapsed));
 
-        let mensagem = 'Erro de conexão. Please try again em instantes.';
-
-        if (err && (err.code === '42501' || String(err.message || '').toLowerCase().includes('permission denied'))) {
-          mensagem = 'Access blocked pela política do banco. Verifique a RLS Policy de SELECT para a tabela Compradores.';
-        }
-
-        if (err && (err.status === 401 || err.status === 403)) {
-          mensagem = 'Chave do Supabase inválida ou sem permissão. Verifique a anon key e as policies.';
-        }
-
-        if (err && (err.code === '42P01' || String(err.message || '').toLowerCase().includes('does not exist'))) {
-          mensagem = 'Tabela não encontrada. Verifique se o nome está exatamente como Compradores no Supabase.';
+        let mensagem = 'Connection error. Please try again.';
+        if (err?.code === '42501' || String(err?.message || '').includes('permission denied')) {
+          mensagem = 'Access blocked. Check the RLS Policy in Supabase.';
+        } else if (err?.status === 401 || err?.status === 403) {
+          mensagem = 'Invalid Supabase key. Check the anon key.';
+        } else if (err?.code === '42P01' || String(err?.message || '').includes('does not exist')) {
+          mensagem = 'Table not found. Check the table name in Supabase.';
         }
 
         mostrarErro(mensagem);
@@ -521,14 +538,38 @@
       const el = document.getElementById('msg-error');
       document.getElementById('msg-error-text').textContent = msg;
       el.style.display = 'flex';
+      document.getElementById('rate-limit-msg').style.display = 'none';
+    }
+
+    function mostrarRateLimit(minutes) {
+      const el = document.getElementById('rate-limit-msg');
+      el.textContent = `Too many failed attempts. Try again in ${minutes} minute${minutes > 1 ? 's' : ''}.`;
+      el.style.display = 'block';
+      esconderErro();
+      document.getElementById('btn-check').disabled = true;
+      document.getElementById('btn-check').innerHTML = '🔒 Locked';
+      // Auto-desbloqueia quando o tempo expirar
+      setTimeout(() => {
+        const rl = checkRateLimit();
+        if (!rl.blocked) {
+          el.style.display = 'none';
+          const btn = document.getElementById('btn-check');
+          btn.disabled = false;
+          btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Verify access';
+        }
+      }, LOCKOUT_MS);
+    }
+
+    function esconderErro() {
+      document.getElementById('msg-error').style.display = 'none';
     }
 
     function mostrarAcessoLiberado(email, nome) {
       document.getElementById('login-form').style.display = 'none';
       const granted = document.getElementById('access-granted');
       granted.style.display = 'block';
-      const saudacao = nome ? `Welcome, ${nome.split(' ')[0]}!` : `Welcome!`;
-      document.getElementById('welcome-text').textContent = saudacao + ' Access granted para ' + email;
+      const saudacao = nome ? `Welcome, ${nome.split(' ')[0]}!` : 'Welcome!';
+      document.getElementById('welcome-text').textContent = `${saudacao} Access granted for ${email}`;
     }
   </script>
 </body>
