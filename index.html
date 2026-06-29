@@ -186,9 +186,10 @@ header{
 .btn-copy{
   flex:1;
   background:var(--lime);color:#000;border:none;
-  padding:9px 16px;font-family:var(--sans);font-size:12px;font-weight:700;
+  padding:10px 16px;font-family:var(--sans);font-size:12px;font-weight:700;
   border-radius:6px;cursor:pointer;transition:all 0.2s;
   display:flex;align-items:center;justify-content:center;gap:6px;
+  min-height:44px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;
 }
 .btn-copy:hover{background:#b8ee00;}
 .btn-copy.copied{background:#10B981;color:#fff;}
@@ -197,6 +198,7 @@ header{
   padding:9px 14px;font-size:12px;font-weight:500;
   border-radius:6px;cursor:pointer;transition:all 0.2s;
   display:flex;align-items:center;justify-content:center;
+  min-height:44px;min-width:44px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;
 }
 .btn-preview:hover{border-color:var(--lime);color:var(--lime);}
 .btn-download{
@@ -204,7 +206,7 @@ header{
   padding:9px 14px;font-size:12px;font-weight:700;
   border-radius:6px;cursor:pointer;transition:all 0.2s;
   display:flex;align-items:center;justify-content:center;gap:5px;
-  white-space:nowrap;
+  white-space:nowrap;min-height:44px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;
 }
 .btn-download:hover{border-color:var(--lime);color:var(--lime);background:rgba(200,255,0,0.06);}
 
@@ -216,7 +218,7 @@ header{
 
 /* MODAL */
 .modal-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;
+  position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:1000;
   display:flex;align-items:center;justify-content:center;padding:20px;
   opacity:0;visibility:hidden;transition:all 0.25s;
 }
@@ -260,11 +262,23 @@ header{
 .modal-copy-btn.copied{background:#10B981;color:#fff;}
 .modal-download-btn{background:var(--bg4);color:var(--fg);border:1px solid var(--border2);}
 .modal-download-btn:hover{border-color:var(--lime);color:var(--lime);background:rgba(200,255,0,0.06);}
-@media(max-width:520px){.modal-footer{flex-direction:column;}.agent-actions{flex-wrap:wrap;}.btn-copy{min-width:100%;}}
+@media(max-width:520px){
+  .modal-footer{flex-direction:column;}
+  .agent-actions{flex-wrap:wrap;}
+  .btn-copy{min-width:100%;}
+  .modal{max-height:92vh;border-radius:12px 12px 0 0;position:fixed;bottom:0;left:0;right:0;width:100%;max-width:100%;}
+  .modal-overlay{align-items:flex-end;padding:0;}
+  .modal-body pre{max-height:250px;}
+  .guide-modal{max-height:92vh;border-radius:12px 12px 0 0;position:fixed;bottom:0;left:0;right:0;width:100%;max-width:100%;}
+  .guide-overlay{align-items:flex-end;padding:0;}
+  .guide-body{padding:20px;}
+  .guide-header{padding:16px 20px;}
+  .guide-tabs{padding:0 12px;}
+}
 
 /* TOAST */
 .toast{
-  position:fixed;bottom:100px;right:24px;z-index:300;
+  position:fixed;bottom:100px;right:24px;z-index:2000;
   background:#10B981;color:#fff;padding:12px 20px;border-radius:8px;
   font-size:13px;font-weight:600;
   transform:translateY(20px);opacity:0;
@@ -307,7 +321,7 @@ header{
 .guide-overlay {
   position: fixed; inset: 0;
   background: rgba(0,0,0,0.88);
-  z-index: 300;
+  z-index: 1000;
   display: flex; align-items: center; justify-content: center;
   padding: 20px;
   opacity: 0; visibility: hidden;
@@ -415,7 +429,7 @@ header{
     <div class="logo-icon">C</div>
     <div class="logo-text">Agents <span>Pro Pack</span></div>
   </a>
-  <div class="header-right"><a class="guide-btn" href="https://agentpackpro.vercel.app/agents_guide" target="_blank">📖 Installation Guide</a>
+  <div class="header-right"><button class="guide-btn" onclick="openGuide()">📖 Installation Guide</button>
     <div class="agent-count-badge">⚡ 102 Agents Ready</div>
   </div>
 </header>
@@ -423,12 +437,12 @@ header{
 <div class="hero-bar">
   <h1>Your <em>AI Specialist Team</em> is Ready.</h1>
   <p>Find the right agent, copy it in one click, and paste into Claude. Expert output from message one — no setup, no configuration.</p>
-  <a href="https://agentpackpro.vercel.app/agents_guide" target="_blank" class="hero-guide-btn">
+  <button type="button" onclick="openGuide()" class="hero-guide-btn" style="border:none;cursor:pointer;">
     <span class="hero-guide-btn-glow"></span>
     <span class="hero-guide-btn-icon">📖</span>
     <span class="hero-guide-btn-text">Installation Guide</span>
     <span class="hero-guide-btn-arrow">→</span>
-  </a>
+  </button>
 </div>
 
 <div class="controls">
@@ -570,38 +584,34 @@ function copyAgent(e, name) {
   if (!agent) return;
   const btn = e.currentTarget;
 
-  function onSuccess() {
+  function markCopied() {
     btn.textContent = '✓ Copied!';
     btn.classList.add('copied');
     showToast();
-    setTimeout(() => {
-      btn.innerHTML = '⚡ Copy Agent';
-      btn.classList.remove('copied');
-    }, 2000);
+    setTimeout(() => { btn.innerHTML = '⚡ Copy Agent'; btn.classList.remove('copied'); }, 2000);
   }
 
-  function onFail() {
-    // Fallback: create temp textarea
-    try {
-      const ta = document.createElement('textarea');
-      ta.value = agent.content;
-      ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0;';
-      document.body.appendChild(ta);
-      ta.focus();
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-      onSuccess();
-    } catch(err) {
-      btn.textContent = '✗ Try again';
-      setTimeout(() => { btn.innerHTML = '⚡ Copy Agent'; }, 2000);
-    }
+  function fallbackCopy() {
+    const ta = document.createElement('textarea');
+    ta.value = agent.content;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:fixed;top:0;left:0;width:2em;height:2em;opacity:0;';
+    document.body.appendChild(ta);
+    // iOS fix
+    const range = document.createRange();
+    range.selectNodeContents(ta);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    ta.setSelectionRange(0, 999999);
+    try { document.execCommand('copy'); markCopied(); } catch(err) { btn.textContent = '✗ Try again'; setTimeout(() => { btn.innerHTML = '⚡ Copy Agent'; }, 2000); }
+    document.body.removeChild(ta);
   }
 
   if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(agent.content).then(onSuccess).catch(onFail);
+    navigator.clipboard.writeText(agent.content).then(markCopied).catch(fallbackCopy);
   } else {
-    onFail();
+    fallbackCopy();
   }
 }
 
@@ -658,37 +668,33 @@ function copyFromModal() {
   if (!agent) return;
   const btn = document.getElementById('modal-copy-btn');
 
-  function onSuccess() {
+  function markCopied() {
     btn.textContent = '✓ Copied to Clipboard!';
     btn.classList.add('copied');
     showToast();
-    setTimeout(() => {
-      btn.textContent = '⚡ Copy Agent to Clipboard';
-      btn.classList.remove('copied');
-    }, 2000);
+    setTimeout(() => { btn.textContent = '⚡ Copy Agent to Clipboard'; btn.classList.remove('copied'); }, 2000);
   }
 
-  function onFail() {
-    try {
-      const ta = document.createElement('textarea');
-      ta.value = agent.content;
-      ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0;';
-      document.body.appendChild(ta);
-      ta.focus();
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-      onSuccess();
-    } catch(err) {
-      btn.textContent = '✗ Try again';
-      setTimeout(() => { btn.textContent = '⚡ Copy Agent to Clipboard'; }, 2000);
-    }
+  function fallbackCopy() {
+    const ta = document.createElement('textarea');
+    ta.value = agent.content;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:fixed;top:0;left:0;width:2em;height:2em;opacity:0;';
+    document.body.appendChild(ta);
+    const range = document.createRange();
+    range.selectNodeContents(ta);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    ta.setSelectionRange(0, 999999);
+    try { document.execCommand('copy'); markCopied(); } catch(err) { btn.textContent = '✗ Try again'; setTimeout(() => { btn.textContent = '⚡ Copy Agent to Clipboard'; }, 2000); }
+    document.body.removeChild(ta);
   }
 
   if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(agent.content).then(onSuccess).catch(onFail);
+    navigator.clipboard.writeText(agent.content).then(markCopied).catch(fallbackCopy);
   } else {
-    onFail();
+    fallbackCopy();
   }
 }
 
@@ -735,15 +741,11 @@ document.getElementById('search').addEventListener('input', e => {
   }, 200);
 });
 
-// ESC to close topmost open modal (no conflict)
+// Unified ESC handler — closes topmost open modal
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
-  if (document.getElementById('bonus-overlay').classList.contains('open')) {
-    closeBonusVideo(); return;
-  }
-  if (document.getElementById('guide-overlay').classList.contains('open')) {
-    closeGuide(); return;
-  }
+  if (document.getElementById('bonus-overlay').classList.contains('open')) { closeBonusVideo(); return; }
+  if (document.getElementById('guide-overlay').classList.contains('open')) { closeGuide(); return; }
   closeModalDirect();
 });
 
@@ -941,30 +943,25 @@ function switchTab(tab) {
   event.currentTarget.classList.add('active');
   document.getElementById('panel-' + tab).classList.add('active');
 }
-// ESC handled by unified listener above
+
 </script>
 
 <!-- WISTIA SCRIPTS -->
 <script src="https://fast.wistia.com/player.js" async></script>
 <script src="https://fast.wistia.com/embed/mwdeqdj9ci.js" async type="module"></script>
 <script>
-// Stop any Wistia audio that may have carried over from the login page
-window._wistiaStopAll = function() {
+function stopAllWistia() {
   try {
     if (window.Wistia && window.Wistia.api) {
-      var embeds = window.Wistia.api.all();
-      if (embeds) embeds.forEach(function(v) { try { v.pause(); } catch(e){} });
+      var all = window.Wistia.api.all();
+      if (all) all.forEach(function(v){ try{ v.pause(); }catch(e){} });
     }
-    document.querySelectorAll('wistia-player').forEach(function(p) {
-      try { if (typeof p.pause === 'function') p.pause(); } catch(e){}
+    document.querySelectorAll('wistia-player').forEach(function(p){
+      try{ if(typeof p.pause==='function') p.pause(); }catch(e){}
     });
-  } catch(e) {}
-};
-// Run on load and after a short delay to catch late-loading players
-window.addEventListener('load', function() {
-  window._wistiaStopAll();
-  setTimeout(window._wistiaStopAll, 800);
-});
+  } catch(e){}
+}
+window.addEventListener('load', function(){ stopAllWistia(); setTimeout(stopAllWistia, 1000); });
 </script>
 <style>
 wistia-player[media-id='mwdeqdj9ci']:not(:defined) {
@@ -974,7 +971,7 @@ wistia-player[media-id='mwdeqdj9ci']:not(:defined) {
 .bonus-overlay {
   position: fixed; inset: 0;
   background: rgba(0,0,0,0.92);
-  z-index: 400;
+  z-index: 1000;
   display: flex; align-items: center; justify-content: center;
   padding: 20px;
   opacity: 0; visibility: hidden;
@@ -1047,16 +1044,12 @@ function openBonusVideo() {
 function closeBonusVideo() {
   document.getElementById('bonus-overlay').classList.remove('open');
   document.body.style.overflow = '';
-  // Pause Wistia player when modal closes
-  try {
-    const player = document.querySelector('wistia-player[media-id="mwdeqdj9ci"]');
-    if (player && typeof player.pause === 'function') player.pause();
-  } catch(err) {}
+  stopAllWistia();
 }
 function closeBonusOverlay(e) {
   if (e.target === document.getElementById('bonus-overlay')) closeBonusVideo();
 }
-// ESC handled by unified listener above
+
 </script>
 
 <!-- FOOTER LEGAL -->
