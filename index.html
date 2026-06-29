@@ -186,10 +186,9 @@ header{
 .btn-copy{
   flex:1;
   background:var(--lime);color:#000;border:none;
-  padding:10px 16px;font-family:var(--sans);font-size:12px;font-weight:700;
+  padding:9px 16px;font-family:var(--sans);font-size:12px;font-weight:700;
   border-radius:6px;cursor:pointer;transition:all 0.2s;
   display:flex;align-items:center;justify-content:center;gap:6px;
-  min-height:44px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;
 }
 .btn-copy:hover{background:#b8ee00;}
 .btn-copy.copied{background:#10B981;color:#fff;}
@@ -198,7 +197,6 @@ header{
   padding:9px 14px;font-size:12px;font-weight:500;
   border-radius:6px;cursor:pointer;transition:all 0.2s;
   display:flex;align-items:center;justify-content:center;
-  min-height:44px;min-width:44px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;
 }
 .btn-preview:hover{border-color:var(--lime);color:var(--lime);}
 .btn-download{
@@ -206,7 +204,7 @@ header{
   padding:9px 14px;font-size:12px;font-weight:700;
   border-radius:6px;cursor:pointer;transition:all 0.2s;
   display:flex;align-items:center;justify-content:center;gap:5px;
-  white-space:nowrap;min-height:44px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+  white-space:nowrap;
 }
 .btn-download:hover{border-color:var(--lime);color:var(--lime);background:rgba(200,255,0,0.06);}
 
@@ -218,7 +216,7 @@ header{
 
 /* MODAL */
 .modal-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:1000;
+  position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;
   display:flex;align-items:center;justify-content:center;padding:20px;
   opacity:0;visibility:hidden;transition:all 0.25s;
 }
@@ -262,23 +260,11 @@ header{
 .modal-copy-btn.copied{background:#10B981;color:#fff;}
 .modal-download-btn{background:var(--bg4);color:var(--fg);border:1px solid var(--border2);}
 .modal-download-btn:hover{border-color:var(--lime);color:var(--lime);background:rgba(200,255,0,0.06);}
-@media(max-width:520px){
-  .modal-footer{flex-direction:column;}
-  .agent-actions{flex-wrap:wrap;}
-  .btn-copy{min-width:100%;}
-  .modal{max-height:92vh;border-radius:12px 12px 0 0;position:fixed;bottom:0;left:0;right:0;width:100%;max-width:100%;}
-  .modal-overlay{align-items:flex-end;padding:0;}
-  .modal-body pre{max-height:250px;}
-  .guide-modal{max-height:92vh;border-radius:12px 12px 0 0;position:fixed;bottom:0;left:0;right:0;width:100%;max-width:100%;}
-  .guide-overlay{align-items:flex-end;padding:0;}
-  .guide-body{padding:20px;}
-  .guide-header{padding:16px 20px;}
-  .guide-tabs{padding:0 12px;}
-}
+@media(max-width:520px){.modal-footer{flex-direction:column;}.agent-actions{flex-wrap:wrap;}.btn-copy{min-width:100%;}}
 
 /* TOAST */
 .toast{
-  position:fixed;bottom:100px;right:24px;z-index:2000;
+  position:fixed;bottom:100px;right:24px;z-index:300;
   background:#10B981;color:#fff;padding:12px 20px;border-radius:8px;
   font-size:13px;font-weight:600;
   transform:translateY(20px);opacity:0;
@@ -321,7 +307,7 @@ header{
 .guide-overlay {
   position: fixed; inset: 0;
   background: rgba(0,0,0,0.88);
-  z-index: 1000;
+  z-index: 300;
   display: flex; align-items: center; justify-content: center;
   padding: 20px;
   opacity: 0; visibility: hidden;
@@ -429,7 +415,7 @@ header{
     <div class="logo-icon">C</div>
     <div class="logo-text">Agents <span>Pro Pack</span></div>
   </a>
-  <div class="header-right"><button class="guide-btn" onclick="openGuide()">📖 Installation Guide</button>
+  <div class="header-right"><a class="guide-btn" href="https://agentpackpro.vercel.app/agents_guide" target="_blank">📖 Installation Guide</a>
     <div class="agent-count-badge">⚡ 102 Agents Ready</div>
   </div>
 </header>
@@ -437,12 +423,12 @@ header{
 <div class="hero-bar">
   <h1>Your <em>AI Specialist Team</em> is Ready.</h1>
   <p>Find the right agent, copy it in one click, and paste into Claude. Expert output from message one — no setup, no configuration.</p>
-  <button type="button" onclick="openGuide()" class="hero-guide-btn" style="border:none;cursor:pointer;">
+  <a href="https://agentpackpro.vercel.app/agents_guide" target="_blank" class="hero-guide-btn">
     <span class="hero-guide-btn-glow"></span>
     <span class="hero-guide-btn-icon">📖</span>
     <span class="hero-guide-btn-text">Installation Guide</span>
     <span class="hero-guide-btn-arrow">→</span>
-  </button>
+  </a>
 </div>
 
 <div class="controls">
@@ -582,37 +568,16 @@ function copyAgent(e, name) {
   e.stopPropagation();
   const agent = AGENTS.find(a => a.name === name);
   if (!agent) return;
-  const btn = e.currentTarget;
-
-  function markCopied() {
+  navigator.clipboard.writeText(agent.content).then(() => {
+    const btn = e.currentTarget;
     btn.textContent = '✓ Copied!';
     btn.classList.add('copied');
     showToast();
-    setTimeout(() => { btn.innerHTML = '⚡ Copy Agent'; btn.classList.remove('copied'); }, 2000);
-  }
-
-  function fallbackCopy() {
-    const ta = document.createElement('textarea');
-    ta.value = agent.content;
-    ta.setAttribute('readonly', '');
-    ta.style.cssText = 'position:fixed;top:0;left:0;width:2em;height:2em;opacity:0;';
-    document.body.appendChild(ta);
-    // iOS fix
-    const range = document.createRange();
-    range.selectNodeContents(ta);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
-    ta.setSelectionRange(0, 999999);
-    try { document.execCommand('copy'); markCopied(); } catch(err) { btn.textContent = '✗ Try again'; setTimeout(() => { btn.innerHTML = '⚡ Copy Agent'; }, 2000); }
-    document.body.removeChild(ta);
-  }
-
-  if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(agent.content).then(markCopied).catch(fallbackCopy);
-  } else {
-    fallbackCopy();
-  }
+    setTimeout(() => {
+      btn.innerHTML = '⚡ Copy Agent';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
 }
 
 function getAgentFileName(agent) {
@@ -666,36 +631,16 @@ function copyFromModal() {
   const name = document.getElementById('modal-overlay')._agentName;
   const agent = AGENTS.find(a => a.name === name);
   if (!agent) return;
-  const btn = document.getElementById('modal-copy-btn');
-
-  function markCopied() {
+  navigator.clipboard.writeText(agent.content).then(() => {
+    const btn = document.getElementById('modal-copy-btn');
     btn.textContent = '✓ Copied to Clipboard!';
     btn.classList.add('copied');
     showToast();
-    setTimeout(() => { btn.textContent = '⚡ Copy Agent to Clipboard'; btn.classList.remove('copied'); }, 2000);
-  }
-
-  function fallbackCopy() {
-    const ta = document.createElement('textarea');
-    ta.value = agent.content;
-    ta.setAttribute('readonly', '');
-    ta.style.cssText = 'position:fixed;top:0;left:0;width:2em;height:2em;opacity:0;';
-    document.body.appendChild(ta);
-    const range = document.createRange();
-    range.selectNodeContents(ta);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
-    ta.setSelectionRange(0, 999999);
-    try { document.execCommand('copy'); markCopied(); } catch(err) { btn.textContent = '✗ Try again'; setTimeout(() => { btn.textContent = '⚡ Copy Agent to Clipboard'; }, 2000); }
-    document.body.removeChild(ta);
-  }
-
-  if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(agent.content).then(markCopied).catch(fallbackCopy);
-  } else {
-    fallbackCopy();
-  }
+    setTimeout(() => {
+      btn.textContent = '⚡ Copy Agent to Clipboard';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
 }
 
 function downloadFromModal() {
@@ -741,12 +686,9 @@ document.getElementById('search').addEventListener('input', e => {
   }, 200);
 });
 
-// Unified ESC handler — closes topmost open modal
+// ESC to close modal
 document.addEventListener('keydown', e => {
-  if (e.key !== 'Escape') return;
-  if (document.getElementById('bonus-overlay').classList.contains('open')) { closeBonusVideo(); return; }
-  if (document.getElementById('guide-overlay').classList.contains('open')) { closeGuide(); return; }
-  closeModalDirect();
+  if (e.key === 'Escape') closeModalDirect();
 });
 
 // Initial render
@@ -943,26 +885,12 @@ function switchTab(tab) {
   event.currentTarget.classList.add('active');
   document.getElementById('panel-' + tab).classList.add('active');
 }
-
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeGuide();
+});
 </script>
 
-<!-- WISTIA SCRIPTS -->
-<script src="https://fast.wistia.com/player.js" async></script>
-<script src="https://fast.wistia.com/embed/mwdeqdj9ci.js" async type="module"></script>
-<script>
-function stopAllWistia() {
-  try {
-    if (window.Wistia && window.Wistia.api) {
-      var all = window.Wistia.api.all();
-      if (all) all.forEach(function(v){ try{ v.pause(); }catch(e){} });
-    }
-    document.querySelectorAll('wistia-player').forEach(function(p){
-      try{ if(typeof p.pause==='function') p.pause(); }catch(e){}
-    });
-  } catch(e){}
-}
-window.addEventListener('load', function(){ stopAllWistia(); setTimeout(stopAllWistia, 1000); });
-</script>
+<!-- WISTIA PLAYER: lazy-loaded only when the bonus modal opens -->
 <style>
 wistia-player[media-id='mwdeqdj9ci']:not(:defined) {
   background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/mwdeqdj9ci/swatch');
@@ -971,7 +899,7 @@ wistia-player[media-id='mwdeqdj9ci']:not(:defined) {
 .bonus-overlay {
   position: fixed; inset: 0;
   background: rgba(0,0,0,0.92);
-  z-index: 1000;
+  z-index: 400;
   display: flex; align-items: center; justify-content: center;
   padding: 20px;
   opacity: 0; visibility: hidden;
@@ -1021,6 +949,15 @@ wistia-player[media-id='mwdeqdj9ci']:not(:defined) {
   white-space: nowrap;
 }
 .bonus-download-btn:hover { opacity: 0.85; }
+#wistia-container {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+#wistia-container wistia-player {
+  display: block;
+  width: 100%;
+}
 </style>
 
 <div class="bonus-overlay" id="bonus-overlay" onclick="closeBonusOverlay(event)">
@@ -1029,27 +966,69 @@ wistia-player[media-id='mwdeqdj9ci']:not(:defined) {
       <h3>🎁 How to Access Your 1,000+ Bonus Skills</h3>
       <button class="bonus-modal-close" onclick="closeBonusVideo()">✕</button>
     </div>
-    <div>
-      <wistia-player media-id="mwdeqdj9ci" aspect="1.7777777777777777"></wistia-player>
-    </div>
+    <div id="wistia-container" style="width:100%;min-height:240px;"></div>
 
   </div>
 </div>
 
 <script>
+function loadWistiaScriptsOnce() {
+  if (!document.getElementById('wistia-player-js')) {
+    const s1 = document.createElement('script');
+    s1.id = 'wistia-player-js';
+    s1.src = 'https://fast.wistia.com/player.js';
+    s1.async = true;
+    document.head.appendChild(s1);
+  }
+
+  if (!document.getElementById('wistia-embed-mwdeqdj9ci')) {
+    const s2 = document.createElement('script');
+    s2.id = 'wistia-embed-mwdeqdj9ci';
+    s2.src = 'https://fast.wistia.com/embed/mwdeqdj9ci.js';
+    s2.async = true;
+    s2.type = 'module';
+    document.head.appendChild(s2);
+  }
+}
+
+function createBonusWistiaPlayer() {
+  const container = document.getElementById('wistia-container');
+  if (!container || container.querySelector('wistia-player')) return;
+
+  const player = document.createElement('wistia-player');
+  player.setAttribute('media-id', 'mwdeqdj9ci');
+  player.setAttribute('aspect', '1.7777777777777777');
+  container.appendChild(player);
+}
+
+function destroyBonusWistiaPlayer() {
+  const container = document.getElementById('wistia-container');
+  if (container) container.innerHTML = '';
+}
+
 function openBonusVideo() {
   document.getElementById('bonus-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
+
+  // Lazy-load Wistia only after the user explicitly opens the video modal.
+  loadWistiaScriptsOnce();
+  createBonusWistiaPlayer();
 }
+
 function closeBonusVideo() {
   document.getElementById('bonus-overlay').classList.remove('open');
   document.body.style.overflow = '';
-  stopAllWistia();
+
+  // Remove the player when the modal closes so audio cannot keep playing in the background.
+  destroyBonusWistiaPlayer();
 }
+
 function closeBonusOverlay(e) {
   if (e.target === document.getElementById('bonus-overlay')) closeBonusVideo();
 }
-
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeBonusVideo();
+});
 </script>
 
 <!-- FOOTER LEGAL -->
