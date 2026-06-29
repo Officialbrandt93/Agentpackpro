@@ -568,8 +568,9 @@ function copyAgent(e, name) {
   e.stopPropagation();
   const agent = AGENTS.find(a => a.name === name);
   if (!agent) return;
-  navigator.clipboard.writeText(agent.content).then(() => {
-    const btn = e.currentTarget;
+  const btn = e.currentTarget;
+
+  function onSuccess() {
     btn.textContent = '✓ Copied!';
     btn.classList.add('copied');
     showToast();
@@ -577,7 +578,31 @@ function copyAgent(e, name) {
       btn.innerHTML = '⚡ Copy Agent';
       btn.classList.remove('copied');
     }, 2000);
-  });
+  }
+
+  function onFail() {
+    // Fallback: create temp textarea
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = agent.content;
+      ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0;';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      onSuccess();
+    } catch(err) {
+      btn.textContent = '✗ Try again';
+      setTimeout(() => { btn.innerHTML = '⚡ Copy Agent'; }, 2000);
+    }
+  }
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(agent.content).then(onSuccess).catch(onFail);
+  } else {
+    onFail();
+  }
 }
 
 function getAgentFileName(agent) {
@@ -631,8 +656,9 @@ function copyFromModal() {
   const name = document.getElementById('modal-overlay')._agentName;
   const agent = AGENTS.find(a => a.name === name);
   if (!agent) return;
-  navigator.clipboard.writeText(agent.content).then(() => {
-    const btn = document.getElementById('modal-copy-btn');
+  const btn = document.getElementById('modal-copy-btn');
+
+  function onSuccess() {
     btn.textContent = '✓ Copied to Clipboard!';
     btn.classList.add('copied');
     showToast();
@@ -640,7 +666,30 @@ function copyFromModal() {
       btn.textContent = '⚡ Copy Agent to Clipboard';
       btn.classList.remove('copied');
     }, 2000);
-  });
+  }
+
+  function onFail() {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = agent.content;
+      ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0;';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      onSuccess();
+    } catch(err) {
+      btn.textContent = '✗ Try again';
+      setTimeout(() => { btn.textContent = '⚡ Copy Agent to Clipboard'; }, 2000);
+    }
+  }
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(agent.content).then(onSuccess).catch(onFail);
+  } else {
+    onFail();
+  }
 }
 
 function downloadFromModal() {
@@ -686,9 +735,16 @@ document.getElementById('search').addEventListener('input', e => {
   }, 200);
 });
 
-// ESC to close modal
+// ESC to close topmost open modal (no conflict)
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModalDirect();
+  if (e.key !== 'Escape') return;
+  if (document.getElementById('bonus-overlay').classList.contains('open')) {
+    closeBonusVideo(); return;
+  }
+  if (document.getElementById('guide-overlay').classList.contains('open')) {
+    closeGuide(); return;
+  }
+  closeModalDirect();
 });
 
 // Initial render
@@ -885,14 +941,31 @@ function switchTab(tab) {
   event.currentTarget.classList.add('active');
   document.getElementById('panel-' + tab).classList.add('active');
 }
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeGuide();
-});
+// ESC handled by unified listener above
 </script>
 
 <!-- WISTIA SCRIPTS -->
 <script src="https://fast.wistia.com/player.js" async></script>
 <script src="https://fast.wistia.com/embed/mwdeqdj9ci.js" async type="module"></script>
+<script>
+// Stop any Wistia audio that may have carried over from the login page
+window._wistiaStopAll = function() {
+  try {
+    if (window.Wistia && window.Wistia.api) {
+      var embeds = window.Wistia.api.all();
+      if (embeds) embeds.forEach(function(v) { try { v.pause(); } catch(e){} });
+    }
+    document.querySelectorAll('wistia-player').forEach(function(p) {
+      try { if (typeof p.pause === 'function') p.pause(); } catch(e){}
+    });
+  } catch(e) {}
+};
+// Run on load and after a short delay to catch late-loading players
+window.addEventListener('load', function() {
+  window._wistiaStopAll();
+  setTimeout(window._wistiaStopAll, 800);
+});
+</script>
 <style>
 wistia-player[media-id='mwdeqdj9ci']:not(:defined) {
   background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/mwdeqdj9ci/swatch');
@@ -974,13 +1047,16 @@ function openBonusVideo() {
 function closeBonusVideo() {
   document.getElementById('bonus-overlay').classList.remove('open');
   document.body.style.overflow = '';
+  // Pause Wistia player when modal closes
+  try {
+    const player = document.querySelector('wistia-player[media-id="mwdeqdj9ci"]');
+    if (player && typeof player.pause === 'function') player.pause();
+  } catch(err) {}
 }
 function closeBonusOverlay(e) {
   if (e.target === document.getElementById('bonus-overlay')) closeBonusVideo();
 }
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeBonusVideo();
-});
+// ESC handled by unified listener above
 </script>
 
 <!-- FOOTER LEGAL -->
